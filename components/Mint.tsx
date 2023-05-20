@@ -28,6 +28,7 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
       [cur.trait_type]: cur.value,
     }
   }, {}) as NFTAttributes;
+
   const [_, imageIPFSHash] = nftMetadata.image.split('ipfs://');
   const image = `https://gateway.pinata.cloud/ipfs/${imageIPFSHash}`;
   const value = {
@@ -46,7 +47,9 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
   const testNet = 'sepolia.';
   const [walletState, setWalletState] = useState(value.wallets[0].name + '::' + value.wallets[0].content);
   const contractLink = `https://${testNet}etherscan.io/address/${value?.contractAddress}`;
-  const dateTime = new Date(value.timestamp).toLocaleString();
+  const dateTime = mounted
+    ? new Date(value.timestamp).toLocaleString()
+    : '';
 
   const recipientAddress = walletState.split('::')[1]; 
 
