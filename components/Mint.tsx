@@ -68,7 +68,7 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
             )}
           </div>
           <div>
-            <ConnectButton />
+            {mounted && <ConnectButton />}
           </div>
         </div>
       </div>

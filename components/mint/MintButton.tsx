@@ -16,7 +16,6 @@ export const MintButton  = (props: MintButtonProps) => {
     contractAddress,
     recipientAddress,
     tokenURI,
-    htmlHash
   } = props;
 
   const testNet = process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
@@ -55,7 +54,7 @@ export const MintButton  = (props: MintButtonProps) => {
       </div>
       )}
       <button
-        disabled={(isLoading || disabled )}
+        disabled={(disabled || isLoading)}
         onClick={mintNFT}
         className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
       >
