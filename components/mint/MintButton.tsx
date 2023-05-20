@@ -33,12 +33,12 @@ export const MintButton  = (props: MintButtonProps) => {
   });
   
   const { data, error, isError, write} = useContractWrite(config);
+
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   })
  
-  
-  
+
   const mintNFT = () => {
     write?.()
   }

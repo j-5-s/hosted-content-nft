@@ -41,12 +41,24 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
   }
 
   if (!Array.isArray(wallet)) {
-    wallet = [wallet];
-  }
+    if (wallet) {
+      wallet = [wallet];
+    } else {
+      wallet = [];
+    }
+    
 
-  const nftMetadata = await fetchDataFromPinata(ipfsHash);
+  }
+  let nftMetadata = null;
+  if (ipfsHash) {
+    try {
+      nftMetadata = await fetchDataFromPinata(ipfsHash);
+    } catch(ex) {
   
-  return {
+    }
+  }
+  
+  const ret = { 
     props: {
       ipfsHash,
       nftMetadata,
@@ -57,10 +69,20 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
       })
     }
   };
+
+  return ret;
 }
 
 const MintPage: NextPage<PageProps> = ({ ipfsHash, nftMetadata, wallets, contractAddress }) => {
-  const tokenURI = `ifps://${ipfsHash}`;
+  const tokenURI = `ipfs://${ipfsHash}`;
+
+  if (!ipfsHash || !nftMetadata || !wallets[0] || !contractAddress) {
+    return (
+      <div>
+        Bad request. Please try again. Make sure to have the following query params: ipfsHash, contractAddress, wallet
+      </div>
+    )
+  }
   return (
    <div>
       <Mint
