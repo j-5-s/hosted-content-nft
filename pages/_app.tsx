@@ -18,7 +18,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'RainbowKit App',
+  appName: 'Content NFT',
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   chains,
 });
