@@ -4,11 +4,11 @@ import {
   useAccount,
 } from 'wagmi'
 import { MintButton } from './mint/MintButton';
-import { NFTMetadata, NFTAttributes, Address} from '../types';
+import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from '../types';
 
 type Props = {
   nftMetadata: NFTMetadata;
-  tokenURI: string;
+  tokenURI: IpfsTokenURI;
   contractAddress: Address;
   wallets: {name: string, content: string}[];
 }

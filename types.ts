@@ -1,5 +1,5 @@
 import type {AbiTypeToPrimitiveType} from 'abitype';
-
+export type IpfsTokenURI = `ipfs://${string}`;
 export type NFTMetadata = {
   name: string;
   image: string;

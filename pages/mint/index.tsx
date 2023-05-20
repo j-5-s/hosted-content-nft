@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import { Mint } from '../../components/Mint'; 
 import Head from 'next/head';
-import { NFTMetadata, Address } from '../../types';
+import { NFTMetadata, Address, IpfsTokenURI } from '../../types';
 
 type PageProps = {
   // Define the shape of the props returned by getServerSideProps
@@ -74,8 +74,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
 }
 
 const MintPage: NextPage<PageProps> = ({ ipfsHash, nftMetadata, wallets, contractAddress }) => {
-  const tokenURI = `ipfs://${ipfsHash}`;
-
+  const tokenURI: IpfsTokenURI = `ipfs://${ipfsHash}`;
+  // @todo better error handling
   if (!ipfsHash || !nftMetadata || !wallets[0] || !contractAddress) {
     return (
       <div>
