@@ -151,6 +151,7 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
               contractAddress={value.contractAddress as Address}
               recipientAddress={recipientAddress as Address}
               tokenURI={tokenURI}
+              htmlHash={value.textSHA256}
             />
            
           </div>

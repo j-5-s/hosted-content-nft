@@ -7,6 +7,7 @@ type MintButtonProps = {
   contractAddress: Address;
   recipientAddress: Address;
   tokenURI: string;
+  htmlHash: string;
   disabled:boolean;
 }
 export const MintButton  = (props: MintButtonProps) => {
@@ -14,7 +15,8 @@ export const MintButton  = (props: MintButtonProps) => {
     disabled,
     contractAddress,
     recipientAddress,
-    tokenURI
+    tokenURI,
+    htmlHash
   } = props;
 
   const testNet = process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
