@@ -1,5 +1,6 @@
 import {  useState, useEffect } from 'react';
-import type { NextPage, GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import type { NextPage } from 'next';
 import { Mint } from '../../components/Mint'; 
 import Head from 'next/head';
 import { Header } from '../../components/header';
@@ -30,10 +31,15 @@ const fetchDataFromPinata = async (ipfsHash: string) => {
   return null;
 };
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
-  let ipfsHash = context?.query?.ipfsHash || '';
-  let contractAddress = context?.query?.contractAddress || '';
-  let wallet = context?.query?.wallet || '';
+type QueryParams = {
+  ipfsHash?: string;
+  contractAddress?: string;
+  wallet?: string | string[];
+}
+export const parseQueryParams = (query: QueryParams)=> {
+  let ipfsHash = query?.ipfsHash || '';
+  let contractAddress = query?.contractAddress || '';
+  let wallet = query?.wallet || '';
   if (Array.isArray(ipfsHash)) {
     ipfsHash = ipfsHash[0];
   }
@@ -50,21 +56,20 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
   
   }
  
-  const ret = { 
-    props: {
-      ipfsHash,
-      contractAddress,
-      wallets: wallet.map((w) => {
-        const [name, content] = w.split('::');
-        return {name, content};
-      })
-    }
+  return {
+    ipfsHash,
+    contractAddress,
+    wallets: wallet.map((w: string) => {
+      const [name, content] = w.split('::');
+      return {name, content};
+    })
   };
 
-  return ret;
 }
 
-const MintPage: NextPage<PageProps> = ({ ipfsHash, wallets, contractAddress }) => {
+const MintPage: NextPage<PageProps> = () => {
+  const router = useRouter();
+  const { ipfsHash, wallets, contractAddress } = parseQueryParams(router.query);
   const [nftMetadata, setNFTMetadata] = useState<NFTMetadata | null>(null);
   const tokenURI: IpfsTokenURI = `ipfs://${ipfsHash}`;
   // @todo better error handling
@@ -81,7 +86,9 @@ const MintPage: NextPage<PageProps> = ({ ipfsHash, wallets, contractAddress }) =
     })();
   }, [ipfsHash]);
 
-  if (!ipfsHash || !wallets[0] || !contractAddress) {
+
+
+  if (router.isReady && (!ipfsHash || !wallets[0] || !contractAddress)) {
     return (
       <div>
         Bad request. Please try again. Make sure to have the following query params: ipfsHash, contractAddress, wallet
