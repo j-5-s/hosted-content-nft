@@ -4,6 +4,7 @@ import {
   useAccount,
 } from 'wagmi'
 import { MintButton } from './mint/MintButton';
+import { DeployContract } from './deploy/DeployContract';
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from '../types';
 
 type Props = {
@@ -54,34 +55,7 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
   const recipientAddress = walletState.split('::')[1]; 
 
   return (
-    <section className="text-gray-600 body-font">
-      <div className="container mx-auto px-5 flex py-5 flex-col">
-        <div className="container mx-auto flex items-center justify-between ">  
-          <div className="flex-1 mr-5">
-            {value.contractAddress && (
-              <div className="bg-gray-100 rounded flex p-4 h-full items-center">
-                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" className="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
-                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-                  <path d="M22 4L12 14.01l-3-3"></path>
-                </svg>
-                <span className="title-font font-medium">
-                  Contract Found: {value.contractAddress}
-                </span>
-              </div>
-            )}
-          </div>
-          <div>
-            <ConnectButton />
-          </div>
-        </div>
-      </div>
-      <div className="container mx-auto flex px-5 pb-5 flex-col">
-        {!value.contractAddress && (
-        <div>
-          <h1 className="text-3xl font-medium title-font mb-4 text-gray-900">Display create contract if not exist</h1>
-        </div>
-        )}
-      </div>
+
       <div className="container mx-auto flex px-5 py-6 md:flex-row flex-col items-center">
         <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
           <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
@@ -163,7 +137,7 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
           <img className="object-cover object-center rounded border" alt="hero" src={value.image} />
         </div>
       </div>
-    </section>
+
   );
 
 }
