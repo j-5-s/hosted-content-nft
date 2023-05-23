@@ -31,7 +31,7 @@ export const Mint = ({ nftMetadata, tokenURI, wallets = [], contractAddress }: P
   }, {}) as NFTAttributes;
 
   const [_, imageIPFSHash] = nftMetadata.image.split('ipfs://');
-  const image = `https://gateway.pinata.cloud/ipfs/${imageIPFSHash}`;
+  const image = `https://ipfs.io/ipfs/${imageIPFSHash}`;
   const value = {
     title: nftMetadata.name,
     url: attributes.URL,

@@ -16,7 +16,7 @@ type PageProps = {
 
 const fetchDataFromPinata = async (ipfsHash: string) => {
   try {
-    const response = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
+    const response = await fetch(`https://ipfs.io/ipfs/${ipfsHash}`);
     
     if (response.ok) {
       const data = await response.json();
