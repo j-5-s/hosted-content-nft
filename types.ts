@@ -14,8 +14,6 @@ export type NFTAttributes = {
   title: string;
   URL: string;
   Timestamp: string;
-  "Image SHA 256": string;
-  "Text SHA 256": string;
+  Text: string;
 };
-
 export type Address = AbiTypeToPrimitiveType<"address">;

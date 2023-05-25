@@ -10,6 +10,7 @@ type Props = {
   tokenURI: IpfsTokenURI;
   ipfsHash: string;
   contractAddress: Address;
+
   wallets: { name: string; content: string }[];
 };
 export const Mint = ({
@@ -40,16 +41,13 @@ export const Mint = ({
     url: attributes.URL,
     image,
     timestamp: attributes.Timestamp,
-    textSHA256: attributes["Text SHA 256"],
-    imageSHA256: attributes["Image SHA 256"],
-    // need to be query params
-
+    text: attributes.Text,
     contractAddress,
     wallets,
   };
 
   const testNet = "sepolia.";
-  const [walletState, setWalletState] = useState(
+  const [walletState] = useState(
     value.wallets[0].name + "::" + value.wallets[0].content
   );
   const contractLink = `https://${testNet}etherscan.io/address/${value?.contractAddress}`;
@@ -58,7 +56,7 @@ export const Mint = ({
   const recipientAddress = walletState.split("::")[1];
 
   return (
-    <div className="container mx-auto flex px-5 py-6 md:flex-row flex-col items-center">
+    <div className="container mx-auto flex px-5 py-6 md:flex-row flex-col">
       <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
         <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
           Mint NFT
@@ -75,6 +73,15 @@ export const Mint = ({
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Date</span>
             <span className="ml-auto text-gray-900 text-xs">{dateTime}</span>
+          </div>
+          <div className="flex border-t border-gray-200 py-2 flex-col">
+            <span className="text-gray-500">Text Content</span>
+            <textarea
+              rows={10}
+              disabled
+              className="ml-auto text-gray-400 text-xs w-full border border-gray-200 bg-gray-100 p-2 rounded"
+              value={value.text}
+            />
           </div>
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Contract Address</span>
@@ -93,6 +100,8 @@ export const Mint = ({
             <span className="text-gray-500">Metadata (IPFS)</span>
             <span className="ml-auto text-gray-900">
               <a
+                target="_blank"
+                rel="noreferrer nofollow"
                 className="text-blue-500 hover:underline text-xs"
                 href={`https://ipfs.io/ipfs/${ipfsHash}`}
               >
