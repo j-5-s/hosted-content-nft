@@ -10,11 +10,11 @@ const DeployPage: NextPage = () => {
   return (
     <section className="text-gray-600 body-font">
       <Header>
-        <h1 className="text-3xl font-medium title-font mb-4 text-gray-900">
+        <h1 className="title-font sm:text-4xl text-3x font-medium text-gray-900">
           Deploy New Contract
         </h1>
       </Header>
-      <div className="container mx-auto flex px-5 pb-5 flex-col">
+      <div className="container mx-auto flex pb-5 flex-col">
         <DeployContract />
       </div>
     </section>

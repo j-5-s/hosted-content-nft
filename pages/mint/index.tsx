@@ -98,28 +98,13 @@ const MintPage: NextPage<PageProps> = () => {
   return (
     <section className="text-gray-600 body-font">
       <Header>
-        {contractAddress && (
-          <div className="bg-gray-100 rounded flex p-4 h-full items-center">
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="3"
-              className="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4"
-              viewBox="0 0 24 24"
-            >
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-              <path d="M22 4L12 14.01l-3-3"></path>
-            </svg>
-            <span className="title-font font-medium">
-              Contract Found: {contractAddress}
-            </span>
-          </div>
-        )}
+        <h1 className="title-font sm:text-4xl text-3x font-medium text-gray-900">
+          Mint NFT
+        </h1>
       </Header>
-      <div className="container mx-auto flex px-5 pb-5 flex-col">
-        {loading && <div>Loading...</div>}
+
+      <div className="container mx-auto flex pb-5 flex-col">
+        {loading && <div className="mt-5">Loading...</div>}
         {!loading && (
           <Mint
             nftMetadata={nftMetadata}
