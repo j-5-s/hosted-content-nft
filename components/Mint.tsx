@@ -87,7 +87,7 @@ export const Mint = ({
                 target="_blank"
                 rel="nofollow noreferrer"
                 href={contractLink}
-                className="text-blue-500 underline text-xs"
+                className="text-blue-500 hover:underline text-xs"
               >
                 {value?.contractAddress}
               </a>

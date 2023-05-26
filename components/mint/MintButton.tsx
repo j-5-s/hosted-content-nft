@@ -3,7 +3,7 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import contractJson from "./contract.json";
+import contractJson from "./CloneableContract.json";
 import type { Address } from "../../types";
 
 type MintButtonProps = {
