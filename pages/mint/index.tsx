@@ -96,12 +96,11 @@ const MintPage: NextPage<PageProps> = () => {
 
   return (
     <section className="text-gray-600 body-font">
-      <Header>
+      <Header step={4}>
         <h1 className="title-font sm:text-4xl text-3x font-medium text-gray-900">
           Mint NFT
         </h1>
       </Header>
-      <Progress />
       <div className="container mx-auto flex pb-5 flex-col">
         {loading && <div className="mt-5">Loading...</div>}
         {!loading && (
