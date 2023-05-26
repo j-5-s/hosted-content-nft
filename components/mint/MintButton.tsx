@@ -10,7 +10,6 @@ type MintButtonProps = {
   contractAddress: Address;
   recipientAddress: Address;
   tokenURI: string;
-  htmlHash: string;
   disabled: boolean;
 };
 export const MintButton = (props: MintButtonProps) => {
@@ -21,8 +20,8 @@ export const MintButton = (props: MintButtonProps) => {
 
   const {
     config,
-    error: prepareError,
-    isError: isPrepareError,
+    // error: prepareError,
+    // isError: isPrepareError,
   } = usePrepareContractWrite({
     address: contractAddress,
     abi: contractJson.abi,
