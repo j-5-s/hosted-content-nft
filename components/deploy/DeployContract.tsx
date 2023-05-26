@@ -1,24 +1,16 @@
-import { FormEvent, useState, ChangeEvent } from "react";
+import { FormEvent, useState, ChangeEvent, useEffect } from "react";
+import { useRouter } from "next/router";
 import { contractText } from "./contract-text";
 import { useWalletClient, useWaitForTransaction } from "wagmi";
 import NFTContract from "../mint/contract.json";
 
-const trimHash = (
-  hash: `0x${string}` | null,
-  prefix: number,
-  suffix: number
-) => {
-  if (!hash) return "";
-  return (
-    hash.substring(0, prefix) + "..." + hash.substring(hash.length - suffix)
-  );
-};
 type ContractArguments = {
   name: string;
   token: string;
 };
 
 export const DeployContract = () => {
+  const router = useRouter();
   const [hash, setHash] = useState<`0x${string}` | undefined>();
   const [error, setError] = useState<string | null>();
   const [isDeployingContract, setIsDeployingContract] = useState(false);
@@ -40,6 +32,13 @@ export const DeployContract = () => {
   const { data, isLoading } = useWaitForTransaction({
     hash,
   });
+  useEffect(() => {
+    if (data?.contractAddress && data?.transactionHash) {
+      router.push(
+        `/deployed?transactionHash=${data?.transactionHash}&contractAddress=${data?.contractAddress}`
+      );
+    }
+  }, [data?.contractAddress, data?.transactionHash]);
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (contract.name && contract.token) {
@@ -128,42 +127,7 @@ export const DeployContract = () => {
             <span className="title-font font-medium">{error}</span>
           </div>
         )}
-        {data && (
-          <div className="bg-gray-100 rounded flex p-4 h-full items-center mt-2">
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="3"
-              className="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4"
-              viewBox="0 0 24 24"
-            >
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-              <path d="M22 4L12 14.01l-3-3"></path>
-            </svg>
-            <span className="title-font font-medium">
-              Successfully deployed your NFT contract! Transaction{" "}
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`https://${testNet}etherscan.io/tx/${data?.transactionHash}`}
-                className="text-blue-500 underline"
-              >
-                {trimHash(data?.transactionHash, 4, 4)}
-              </a>
-              . Contract{" "}
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`https://${testNet}etherscan.io/tx/${data?.transactionHash}`}
-                className="text-blue-500 underline"
-              >
-                {trimHash(data?.contractAddress, 4, 4)}
-              </a>
-            </span>
-          </div>
-        )}
+
         <button
           disabled={isDeployingContract || isLoading}
           className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg disabled:opacity-25"

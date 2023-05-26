@@ -17,3 +17,5 @@ export type NFTAttributes = {
   Text: string;
 };
 export type Address = AbiTypeToPrimitiveType<"address">;
+
+export type AddressString = `0x${string}`;

@@ -1,9 +1,5 @@
 import type { NextPage } from "next";
-
-// import { Mint } from "../../components/Mint";
-// import Head from "next/head";
 import { Header } from "../../components/header";
-// import { NFTMetadata, Address, IpfsTokenURI } from "../../types";
 import { DeployContract } from "../../components/deploy/DeployContract";
 
 const DeployPage: NextPage = () => {

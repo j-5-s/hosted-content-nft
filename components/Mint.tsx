@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/router";
 import { MintButton } from "./mint/MintButton";
-import { DeployContract } from "./deploy/DeployContract";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 
 type Props = {
@@ -20,7 +19,7 @@ export const Mint = ({
   wallets = [],
   contractAddress,
 }: Props) => {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
