@@ -5,7 +5,7 @@ import { DeployContract } from "../../components/deploy/DeployContract";
 const DeployPage: NextPage = () => {
   return (
     <section className="text-gray-600 body-font">
-      <Header>
+      <Header step={2}>
         <h1 className="title-font sm:text-4xl text-3x font-medium text-gray-900">
           Deploy New Contract
         </h1>

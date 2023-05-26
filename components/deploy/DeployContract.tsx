@@ -62,8 +62,7 @@ export const DeployContract = () => {
       }
     }
   };
-  const testNet =
-    process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
+
   return (
     <div className="py-6">
       <form

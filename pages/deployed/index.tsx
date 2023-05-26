@@ -13,11 +13,12 @@ const DeployedPage: NextPage = () => {
   ) as AddressString;
   return (
     <section className="text-gray-600 body-font">
-      <Header>
+      <Header step={3}>
         <h1 className="title-font sm:text-4xl text-3x font-medium text-gray-900">
           Install Metadata
         </h1>
       </Header>
+
       <div className="container mx-auto flex pb-5 flex-col">
         <MetadataInstructions
           transactionHash={transactionHash}

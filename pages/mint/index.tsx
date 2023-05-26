@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import { Mint } from "../../components/Mint";
-import Head from "next/head";
 import { Header } from "../../components/header";
 import { NFTMetadata, Address, IpfsTokenURI } from "../../types";
-
+import { Progress } from "../../components/progress/Progress";
 type PageProps = {
   // Define the shape of the props returned by getServerSideProps
   // based on your specific data requirements
@@ -102,7 +101,7 @@ const MintPage: NextPage<PageProps> = () => {
           Mint NFT
         </h1>
       </Header>
-
+      <Progress />
       <div className="container mx-auto flex pb-5 flex-col">
         {loading && <div className="mt-5">Loading...</div>}
         {!loading && (
