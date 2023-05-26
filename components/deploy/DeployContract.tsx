@@ -2,7 +2,7 @@ import { FormEvent, useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 import { contractText } from "./contract-text";
 import { useWalletClient, useWaitForTransaction } from "wagmi";
-import NFTContract from "../mint/contract.json";
+import CloneableContract from "../mint/CloneableContract.json";
 
 type ContractArguments = {
   name: string;
@@ -46,10 +46,10 @@ export const DeployContract = () => {
         setError(null);
         setIsDeployingContract(true);
         const hash = await walletClient?.deployContract({
-          abi: NFTContract.abi,
+          abi: CloneableContract.abi,
           account: walletClient.account,
           args: [contract.name, contract.token],
-          bytecode: NFTContract.bytecode as `0x${string}`,
+          bytecode: CloneableContract.bytecode as `0x${string}`,
         });
 
         setHash(hash);

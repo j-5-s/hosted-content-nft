@@ -83,7 +83,7 @@ const MintPage: NextPage<PageProps> = () => {
     })();
   }, [ipfsHash]);
 
-  if (router.isReady && (!ipfsHash || !wallets[0] || !contractAddress)) {
+  if (router.isReady && (!ipfsHash || !contractAddress)) {
     return (
       <div>
         Bad request. Please try again. Make sure to have the following query
@@ -108,7 +108,6 @@ const MintPage: NextPage<PageProps> = () => {
             nftMetadata={nftMetadata}
             tokenURI={tokenURI}
             ipfsHash={ipfsHash}
-            wallets={wallets}
             contractAddress={contractAddress as Address}
           />
         )}

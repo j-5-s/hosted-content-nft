@@ -2,32 +2,28 @@ export const contractText = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract CloneableNFT is ERC721 {
+contract CloneableNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
-    address private _owner;
     uint256 private _defaultClonePrice = 0.01 ether;
     mapping(uint256 => bool) private _isClone;
     mapping(uint256 => uint256) private _cloneOf;
     mapping(uint256 => uint256) private _clonePrice;
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
-        _owner = msg.sender;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == _owner, "Only the contract owner can perform this action");
-        _;
-    }
-
-    function mintOriginal() public onlyOwner {
+    function mintOriginalNFT(string memory _tokenURI) public onlyOwner {
         _tokenIdCounter.increment();
         uint256 newTokenId = _tokenIdCounter.current();
-        _safeMint(msg.sender, newTokenId);
+        _mint(msg.sender, newTokenId);
         _isClone[newTokenId] = false;
+        _setTokenURI(newTokenId, _tokenURI);
     }
 
     function mintClone(uint256 tokenId) public payable {
@@ -64,8 +60,16 @@ contract CloneableNFT is ERC721 {
         _defaultClonePrice = newPrice;
     }
 
+    function _burn(uint256 tokenId) internal override(ERC721URIStorage) {
+        super._burn(tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721URIStorage) returns (string memory) {
+        return super.tokenURI(tokenId);
+    }
+
     function withdraw() public onlyOwner {
-        payable(_owner).transfer(address(this).balance);
+        payable(owner()).transfer(address(this).balance);
     }
 }
-  `;
+`;

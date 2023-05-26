@@ -9,14 +9,11 @@ type Props = {
   tokenURI: IpfsTokenURI;
   ipfsHash: string;
   contractAddress: Address;
-
-  wallets: { name: string; content: string }[];
 };
 export const Mint = ({
   nftMetadata,
   tokenURI,
   ipfsHash,
-  wallets = [],
   contractAddress,
 }: Props) => {
   const { isConnected } = useAccount();
@@ -42,17 +39,12 @@ export const Mint = ({
     timestamp: attributes.Timestamp,
     text: attributes.Text,
     contractAddress,
-    wallets,
   };
 
   const testNet = "sepolia.";
-  const [walletState] = useState(
-    value.wallets[0].name + "::" + value.wallets[0].content
-  );
+
   const contractLink = `https://${testNet}etherscan.io/address/${value?.contractAddress}`;
   const dateTime = mounted ? new Date(value.timestamp).toLocaleString() : "";
-
-  const recipientAddress = walletState.split("::")[1];
 
   return (
     <div className="container mx-auto flex py-6 md:flex-row flex-col">
@@ -107,17 +99,16 @@ export const Mint = ({
           </div>
         </div>
         <p className="my-4 leading-relaxed text-xs bg-gray-100 rounded p-4">
-          By clicking Mint you we create a transaction on the blockchain to mint
-          your NFT. This will cost you a small fee. The SHA 256 hash of your
-          html will be used to create the NFT. This means that if you change the
-          html of the page the NFT will be different.
+          By clicking Mint you will create a transaction on the blockchain to
+          mint your NFT. This will cost you a small fee. The SHA 256 hash of
+          your html will be used to create the NFT. This means that if you
+          change the html of the page the NFT will be different.
         </p>
 
         <div className="flex w-full">
           <MintButton
             disabled={!mounted || !isConnected}
             contractAddress={value.contractAddress as Address}
-            recipientAddress={recipientAddress as Address}
             tokenURI={tokenURI}
           />
         </div>

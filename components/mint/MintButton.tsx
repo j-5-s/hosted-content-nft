@@ -3,17 +3,16 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import contractJson from "./CloneableContract.json";
+import cloneableContract from "./CloneableContract.json";
 import type { Address } from "../../types";
 
 type MintButtonProps = {
   contractAddress: Address;
-  recipientAddress: Address;
   tokenURI: string;
   disabled: boolean;
 };
 export const MintButton = (props: MintButtonProps) => {
-  const { disabled, contractAddress, recipientAddress, tokenURI } = props;
+  const { disabled, contractAddress, tokenURI } = props;
 
   const testNet =
     process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
@@ -24,9 +23,9 @@ export const MintButton = (props: MintButtonProps) => {
     // isError: isPrepareError,
   } = usePrepareContractWrite({
     address: contractAddress,
-    abi: contractJson.abi,
+    abi: cloneableContract.abi,
     functionName: "mintNFT",
-    args: [recipientAddress, tokenURI],
+    args: [tokenURI],
   });
 
   const { data, error, isError, write } = useContractWrite(config);
