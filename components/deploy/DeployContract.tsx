@@ -143,7 +143,7 @@ export const DeployContract = () => {
               <path d="M22 4L12 14.01l-3-3"></path>
             </svg>
             <span className="title-font font-medium">
-              Successfully minted your NFT! Transaction{" "}
+              Successfully deployed your NFT contract! Transaction{" "}
               <a
                 target="_blank"
                 rel="noreferrer"
