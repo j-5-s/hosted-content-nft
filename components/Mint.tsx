@@ -119,11 +119,6 @@ export const Mint = ({
           alt="hero"
           className="object-cover object-center rounded border"
         />
-        {/* <img
-          className="object-cover object-center rounded border"
-          alt="hero"
-          src={value.image}
-        /> */}
       </div>
     </div>
   );

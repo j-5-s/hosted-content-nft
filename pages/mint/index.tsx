@@ -97,7 +97,6 @@ const MintPage: NextPage<PageProps> = () => {
   //   );
   // }
 
-  const loading = !nftMetadata;
   const showLoader = !nftMetadata || !mounted;
   return (
     <section className="text-gray-600 body-font">
