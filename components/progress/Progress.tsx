@@ -1,11 +1,19 @@
 import cs from "classnames";
+import { getFirstQueryParam } from "../util";
 
 type Props = {
   step: number;
 };
 
 export const Progress = (props: Props) => {
+  const transactionHash = getFirstQueryParam("transactionHash");
+  const contractAddress = getFirstQueryParam("contractAddress");
   const { step } = props;
+  let deployed;
+  if (step >= 3 && contractAddress) {
+    deployed = `/deployed?transactionHash=${transactionHash}&contractAddress=${contractAddress}`;
+  }
+
   return (
     <div className="container mx-auto">
       <div className="flex mx-auto  flex-wrap">
@@ -60,6 +68,7 @@ export const Progress = (props: Props) => {
           2. Deploy Contract
         </a>
         <a
+          href={deployed}
           className={cs(
             "sm:px-6 py-3  md:w-1/4 w-full justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
             {

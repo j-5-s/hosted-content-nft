@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { useRouter } from "next/router";
 import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
+import { SlowImageLoader } from "./image/SlowImageLoader";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -114,11 +114,16 @@ export const Mint = ({
         </div>
       </div>
       <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-        <img
+        <SlowImageLoader
+          src={value.image}
+          alt="hero"
+          className="object-cover object-center rounded border"
+        />
+        {/* <img
           className="object-cover object-center rounded border"
           alt="hero"
           src={value.image}
-        />
+        /> */}
       </div>
     </div>
   );

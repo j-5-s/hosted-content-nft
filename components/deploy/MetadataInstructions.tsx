@@ -28,11 +28,12 @@ export const MetadataInstructions = (props: Props) => {
           <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
             <p className="mb-4 leading-relaxed">
               Create a metatag with name attribute of{" "}
-              <span className="bg-gray-200">nft-contract-address</span> and
-              content attribute{" "}
-              <span className="bg-gray-200">{contractAddress}</span>. The Chrome
-              extension will use this when taking screenshots to mint the NFT.
-              Additionally, it will be used to validate your NFT ownership.
+              <span className="underline font-bold">nft-contract-address</span>{" "}
+              and content attribute{" "}
+              <span className="underline font-bold">{contractAddress}</span>.
+              The Chrome extension will use this when taking screenshots to mint
+              the NFT. Additionally, it will be used to validate your NFT
+              ownership.
             </p>
             <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">
               Example
@@ -44,10 +45,10 @@ export const MetadataInstructions = (props: Props) => {
                 className="bg-gray-200 rounded p-2 w-full text-xs border border-gray-400"
               />
             </div>
-            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">
+            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
               Save this contract information:
             </h2>
-            <div className=" flex border-b border-gray-200 py-2 w-full items-center">
+            <div className=" flex border-b border-gray-200 w-full items-center">
               <span className="text-gray-500">Tx</span>
               <span className="ml-auto text-gray-900 text-xs">
                 <a
@@ -60,7 +61,7 @@ export const MetadataInstructions = (props: Props) => {
                 </a>
               </span>
             </div>
-            <div className="flex border-b border-gray-200 py-2 w-full items-center">
+            <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
               <span className="text-gray-500">Address</span>
               <span className="ml-auto text-gray-900 text-xs">
                 <a
@@ -73,7 +74,15 @@ export const MetadataInstructions = (props: Props) => {
                 </a>
               </span>
             </div>
+            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
+              Next Steps
+            </h2>
+            <p>
+              After installing the metatag on your website, use the chrome
+              extension to capture a screenshot and get to step 4.
+            </p>
           </div>
+
           <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
             <Image
               width={500}

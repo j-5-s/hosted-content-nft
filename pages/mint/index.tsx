@@ -5,6 +5,7 @@ import { Mint } from "../../components/Mint";
 import { Header } from "../../components/header";
 import { NFTMetadata, Address, IpfsTokenURI } from "../../types";
 import { Progress } from "../../components/progress/Progress";
+import { MintLoading } from "../../components/mint/MintLoading";
 type PageProps = {
   // Define the shape of the props returned by getServerSideProps
   // based on your specific data requirements
@@ -68,6 +69,7 @@ const MintPage: NextPage<PageProps> = () => {
   const router = useRouter();
   const { ipfsHash, wallets, contractAddress } = parseQueryParams(router.query);
   const [nftMetadata, setNFTMetadata] = useState<NFTMetadata | null>(null);
+  const [mounted, setMounted] = useState(false);
   const tokenURI: IpfsTokenURI = `ipfs://${ipfsHash}`;
   // @todo better error handling
 
@@ -82,18 +84,21 @@ const MintPage: NextPage<PageProps> = () => {
       }
     })();
   }, [ipfsHash]);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  if (router.isReady && (!ipfsHash || !contractAddress)) {
-    return (
-      <div>
-        Bad request. Please try again. Make sure to have the following query
-        params: ipfsHash, contractAddress, wallet
-      </div>
-    );
-  }
+  // if (router.isReady && (!ipfsHash || !contractAddress)) {
+  //   return (
+  //     <div>
+  //       Bad request. Please try again. Make sure to have the following query
+  //       params: ipfsHash, contractAddress, wallet
+  //     </div>
+  //   );
+  // }
 
   const loading = !nftMetadata;
-
+  const showLoader = !nftMetadata || !mounted;
   return (
     <section className="text-gray-600 body-font">
       <Header step={4}>
@@ -102,8 +107,8 @@ const MintPage: NextPage<PageProps> = () => {
         </h1>
       </Header>
       <div className="container mx-auto flex pb-5 flex-col">
-        {loading && <div className="mt-5">Loading...</div>}
-        {!loading && (
+        {showLoader && <MintLoading ipfsHash={ipfsHash} />}
+        {!showLoader && (
           <Mint
             nftMetadata={nftMetadata}
             tokenURI={tokenURI}
