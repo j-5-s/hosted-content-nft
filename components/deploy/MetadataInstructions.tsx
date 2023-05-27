@@ -1,15 +1,16 @@
 import Image from "next/image";
-
-const trimHash = (
-  hash: `0x${string}` | null,
-  prefix: number,
-  suffix: number
-) => {
-  if (!hash) return "";
-  return (
-    hash.substring(0, prefix) + "..." + hash.substring(hash.length - suffix)
-  );
-};
+import { useNetwork } from "wagmi";
+import { getUrl } from "../util";
+// const trimHash = (
+//   hash: `0x${string}` | null,
+//   prefix: number,
+//   suffix: number
+// ) => {
+//   if (!hash) return "";
+//   return (
+//     hash.substring(0, prefix) + "..." + hash.substring(hash.length - suffix)
+//   );
+// };
 
 type Props = {
   transactionHash?: `0x${string}`;
@@ -17,8 +18,14 @@ type Props = {
 };
 
 export const MetadataInstructions = (props: Props) => {
+  const network = useNetwork();
   const { transactionHash, contractAddress } = props;
   const metaTagHtml = `<meta name="nft_contract_address" content="${contractAddress}" />`;
+  console.log(network);
+  const txLink = getUrl({
+    tx: transactionHash,
+    network: network?.chain?.network,
+  });
   const testNet =
     process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
   return (
@@ -85,7 +92,7 @@ export const MetadataInstructions = (props: Props) => {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href={`https://${testNet}etherscan.io/tx/${transactionHash}`}
+                  href={txLink}
                   className="text-blue-500 underline"
                 >
                   {transactionHash}

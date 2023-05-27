@@ -10,6 +10,7 @@ import {
   optimism,
   polygon,
   sepolia,
+  polygonMumbai,
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -19,7 +20,9 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
     polygon,
     optimism,
     arbitrum,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [sepolia] : []),
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+      ? [sepolia, polygonMumbai]
+      : []),
   ],
   [publicProvider()]
 );
