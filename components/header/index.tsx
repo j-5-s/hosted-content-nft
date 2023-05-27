@@ -3,7 +3,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Progress } from "../progress/Progress";
 type HeaderProps = {
   children?: React.ReactNode;
-  step: number;
+  step?: number;
 };
 export const Header = ({ children, step }: HeaderProps) => {
   return (
@@ -14,9 +14,11 @@ export const Header = ({ children, step }: HeaderProps) => {
           <ConnectButton />
         </div>
       </div>
-      <div className="mt-2 border-t border-gray-200 ">
-        <Progress step={step} />
-      </div>
+      {step && (
+        <div className="mt-2 border-t border-gray-200 ">
+          <Progress step={step} />
+        </div>
+      )}
     </div>
   );
 };

@@ -2,9 +2,11 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useNetwork,
 } from "wagmi";
 import cloneableContract from "./CloneableContract.json";
 import type { Address } from "../../types";
+import { getUrl } from "../util";
 
 type MintButtonProps = {
   contractAddress: Address;
@@ -28,9 +30,7 @@ const getErrorMessage = (error?: PrepareCause) => {
 };
 export const MintButton = (props: MintButtonProps) => {
   const { disabled, contractAddress, tokenURI, url } = props;
-
-  const testNet =
-    process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
+  const network = useNetwork();
 
   const {
     config,
@@ -42,8 +42,6 @@ export const MintButton = (props: MintButtonProps) => {
     functionName: "mintNFT",
     args: [tokenURI, url],
   });
-
-  console.log(prepareError);
 
   const { data, error, isError, write } = useContractWrite(config);
 
@@ -59,6 +57,11 @@ export const MintButton = (props: MintButtonProps) => {
     prepareError?.cause as PrepareCause
   );
 
+  const txLink = getUrl({
+    tx: data?.hash as string,
+    network: network.chain?.network,
+  });
+
   return (
     <div className="w-full flex flex-col">
       {(isError || prepareErrorMessage) && (
@@ -69,7 +72,13 @@ export const MintButton = (props: MintButtonProps) => {
         </div>
       )}
       <button
-        disabled={disabled || isLoading || !contractAddress || isPrepareError}
+        disabled={
+          disabled ||
+          isLoading ||
+          !contractAddress ||
+          isPrepareError ||
+          !!data?.hash
+        }
         onClick={mintNFT}
         className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
       >
@@ -94,10 +103,10 @@ export const MintButton = (props: MintButtonProps) => {
             <a
               target="_blank"
               rel="noreferrer"
-              href={`https://${testNet}etherscan.io/tx/${data?.hash}`}
-              className="text-blue-500 underline"
+              href={txLink}
+              className="text-blue-500 underline text-xs"
             >
-              View transaction on Etherscan
+              {data?.hash}
             </a>
           </span>
         </div>

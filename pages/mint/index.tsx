@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import { Mint } from "../../components/Mint";
 import { Header } from "../../components/header";
 import { NFTMetadata, Address, IpfsTokenURI } from "../../types";
-import { Progress } from "../../components/progress/Progress";
+import { fetchData } from "../../components/util";
 import { MintLoading } from "../../components/mint/MintLoading";
 type PageProps = {
   // Define the shape of the props returned by getServerSideProps
@@ -12,23 +12,6 @@ type PageProps = {
   ipfsHash: string;
   contractAddress: string;
   wallets: { name: string; content: string }[];
-};
-
-const fetchDataFromPinata = async (ipfsHash: string) => {
-  try {
-    const response = await fetch(`https://ipfs.io/ipfs/${ipfsHash}`);
-
-    if (response.ok) {
-      const data = await response.json();
-      // Process the retrieved data here
-      return data;
-    } else {
-      // Handle error response
-    }
-  } catch (error) {
-    // Handle fetch error
-  }
-  return null;
 };
 
 type QueryParams = {
@@ -77,7 +60,7 @@ const MintPage: NextPage<PageProps> = () => {
     if (!ipfsHash) return;
     (async () => {
       try {
-        const data = await fetchDataFromPinata(ipfsHash);
+        const data = await fetchData(ipfsHash);
         setNFTMetadata(data);
       } catch (ex) {
         console.log(ex);
@@ -87,15 +70,6 @@ const MintPage: NextPage<PageProps> = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // if (router.isReady && (!ipfsHash || !contractAddress)) {
-  //   return (
-  //     <div>
-  //       Bad request. Please try again. Make sure to have the following query
-  //       params: ipfsHash, contractAddress, wallet
-  //     </div>
-  //   );
-  // }
 
   const showLoader = !nftMetadata || !mounted;
   return (

@@ -20,28 +20,60 @@ type Props = {
 export const MetadataInstructions = (props: Props) => {
   const network = useNetwork();
   const { transactionHash, contractAddress } = props;
-  const metaTagHtml = `<meta name="nft_contract_address" content="${contractAddress}" />`;
+  console.log(network);
+  const metaTagHtml = `<meta name="nft_contract_address" content="${contractAddress}" />
+<meta name="nft_contract_network" content="${network?.chain?.network}" />`;
   console.log(network);
   const txLink = getUrl({
     tx: transactionHash,
     network: network?.chain?.network,
   });
-  const testNet =
-    process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
+  const addressLink = getUrl({
+    address: contractAddress,
+    network: network?.chain?.network,
+  });
+  // const testNet =
+  //   process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
   return (
     <div className="py-6">
       <section className="text-gray-600 body-font">
         <div className="container mx-auto flex  md:flex-row flex-col">
           <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
             <p className="mb-4 leading-relaxed">
-              Create a metatag with name attribute of{" "}
-              <span className="underline font-bold">nft-contract-address</span>{" "}
-              and content attribute{" "}
-              <span className="underline font-bold">{contractAddress}</span>.
-              The Chrome extension will use this when taking screenshots to mint
-              the NFT. Additionally, it will be used to validate your NFT
-              ownership.
+              Install the below meta tags on your website.
             </p>
+            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
+              Meta:
+            </h2>
+            <div className=" flex border-b border-gray-200 w-full items-center">
+              <span className="text-gray-500">name</span>
+              <span className="ml-auto text-gray-900 text-xs">
+                nft_contract_address
+              </span>
+            </div>
+            <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
+              <span className="text-gray-500">value</span>
+              <span className="ml-auto text-gray-900 text-xs">
+                {contractAddress}
+              </span>
+            </div>
+
+            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
+              Meta:
+            </h2>
+            <div className=" flex border-b border-gray-200 w-full items-center">
+              <span className="text-gray-500">name</span>
+              <span className="ml-auto text-gray-900 text-xs">
+                nft_contract_network
+              </span>
+            </div>
+            <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
+              <span className="text-gray-500">value</span>
+              <span className="ml-auto text-gray-900 text-xs">
+                {network?.chain?.network}
+              </span>
+            </div>
+
             <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">
               Example
             </h2>
@@ -105,7 +137,7 @@ export const MetadataInstructions = (props: Props) => {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href={`https://${testNet}etherscan.io/address/${contractAddress}`}
+                  href={addressLink}
                   className="text-blue-500 underline"
                 >
                   {contractAddress}

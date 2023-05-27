@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 import { SlowImageLoader } from "./image/SlowImageLoader";
+import { getFirstQueryParam, getUrl } from "./util";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -17,11 +18,22 @@ export const Mint = ({
   contractAddress,
 }: Props) => {
   const { isConnected } = useAccount();
+  const network = useNetwork();
+  const { switchNetwork, chains } = useSwitchNetwork();
   const [mounted, setMounted] = useState(false);
-
+  const netQueryParam = getFirstQueryParam("network");
   useEffect(() => {
     setMounted(true);
   }, []);
+  const net = network.chain?.network;
+  useEffect(() => {
+    if (net !== netQueryParam && switchNetwork) {
+      const chain = chains.find((chain) => chain.network === netQueryParam);
+      if (chain) {
+        switchNetwork(chain.id);
+      }
+    }
+  }, [net, netQueryParam, switchNetwork, chains]);
 
   const attributes = nftMetadata.attributes.reduce((acc, cur) => {
     return {
@@ -41,9 +53,10 @@ export const Mint = ({
     contractAddress,
   };
 
-  const testNet = "sepolia.";
-
-  const contractLink = `https://${testNet}etherscan.io/address/${value?.contractAddress}`;
+  const contractLink = getUrl({
+    address: value?.contractAddress,
+    network: network.chain?.network,
+  });
   const dateTime = mounted ? new Date(value.timestamp).toLocaleString() : "";
 
   return (
@@ -83,6 +96,10 @@ export const Mint = ({
                 {value?.contractAddress}
               </a>
             </span>
+          </div>
+          <div className="flex border-t border-gray-200 py-2">
+            <span className="text-gray-500">Network</span>
+            <span className="ml-auto text-gray-900">{netQueryParam}</span>
           </div>
           <div className="flex border-t border-b border-gray-200 py-2">
             <span className="text-gray-500">Metadata (IPFS)</span>

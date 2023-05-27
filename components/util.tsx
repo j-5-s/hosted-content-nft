@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { NFTMetadata, NFTAttributes } from "../types";
 
 export function getFirstQueryParam(key: string) {
   const router = useRouter();
@@ -33,3 +34,41 @@ export function getUrl({ address, tx, network }: GetURLProps) {
     return `https://etherscan.io/${tx ? "tx" : "address"}/${address}`;
   }
 }
+
+export const getAttributesAsKeys = (nftMetadata: NFTMetadata | null) => {
+  return nftMetadata?.attributes.reduce((acc, cur) => {
+    return {
+      ...acc,
+      [cur.trait_type]: cur.value,
+    };
+  }, {}) as NFTAttributes;
+};
+
+export const getImagURIFromIPFS = (
+  ipfsHash: string,
+  fallback = "https://dummyimage.com/720x400"
+) => {
+  const hash = ipfsHash.replace("ipfs://", "");
+  // @todo loading
+  if (!hash) return fallback;
+
+  return `https://ipfs.io/ipfs/${hash}`;
+};
+
+export const fetchData = async (ipfsHash: string) => {
+  try {
+    const hash = ipfsHash.replace("ipfs://", "");
+    const response = await fetch(`https://ipfs.io/ipfs/${hash}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      // Process the retrieved data here
+      return data;
+    } else {
+      // Handle error response
+    }
+  } catch (error) {
+    // Handle fetch error
+  }
+  return null;
+};
