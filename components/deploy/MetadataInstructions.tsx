@@ -45,6 +45,37 @@ export const MetadataInstructions = (props: Props) => {
                 className="bg-gray-200 rounded p-2 w-full text-xs border border-gray-400"
               />
             </div>
+
+            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
+              Next Steps
+            </h2>
+            <p className="mb-4">
+              After installing the metatag on your website, use the chrome
+              extension to capture a screenshot and get to step 4.
+            </p>
+            <div className="flex items-center w-full flex-col">
+              <div className="border border-gray-200 rounded">
+                <Image
+                  width={500}
+                  height={328}
+                  className="object-cover object-center  "
+                  alt="hero"
+                  src="/popup-example.png"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="border border-gray-200 rounded mb-4">
+              <Image
+                width={500}
+                height={375}
+                className="object-cover object-center"
+                alt="hero"
+                src="/metatag.png"
+              />
+            </div>
             <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
               Save this contract information:
             </h2>
@@ -74,23 +105,6 @@ export const MetadataInstructions = (props: Props) => {
                 </a>
               </span>
             </div>
-            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
-              Next Steps
-            </h2>
-            <p>
-              After installing the metatag on your website, use the chrome
-              extension to capture a screenshot and get to step 4.
-            </p>
-          </div>
-
-          <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-            <Image
-              width={500}
-              height={375}
-              className="object-cover object-center rounded"
-              alt="hero"
-              src="/metatag.png"
-            />
           </div>
         </div>
       </section>

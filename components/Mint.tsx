@@ -110,6 +110,7 @@ export const Mint = ({
             disabled={!mounted || !isConnected}
             contractAddress={value.contractAddress as Address}
             tokenURI={tokenURI}
+            url={value.url}
           />
         </div>
       </div>

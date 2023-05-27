@@ -10,23 +10,40 @@ type MintButtonProps = {
   contractAddress: Address;
   tokenURI: string;
   disabled: boolean;
+  url: string;
+};
+
+type PrepareCause = {
+  name: string;
+  reason: string;
+  shortMessage: string;
+};
+const getErrorMessage = (error?: PrepareCause) => {
+  if (error?.name === "ContractFunctionRevertedError") {
+    if (error.reason === "Ownable: caller is not the owner") {
+      return "Only the contract owner may call the mint function";
+    }
+  }
+  return null;
 };
 export const MintButton = (props: MintButtonProps) => {
-  const { disabled, contractAddress, tokenURI } = props;
+  const { disabled, contractAddress, tokenURI, url } = props;
 
   const testNet =
     process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
 
   const {
     config,
-    // error: prepareError,
-    // isError: isPrepareError,
+    error: prepareError,
+    isError: isPrepareError,
   } = usePrepareContractWrite({
     address: contractAddress,
     abi: cloneableContract.abi,
     functionName: "mintNFT",
-    args: [tokenURI],
+    args: [tokenURI, url],
   });
+
+  console.log(prepareError);
 
   const { data, error, isError, write } = useContractWrite(config);
 
@@ -38,15 +55,21 @@ export const MintButton = (props: MintButtonProps) => {
     write?.();
   };
 
+  const prepareErrorMessage = getErrorMessage(
+    prepareError?.cause as PrepareCause
+  );
+
   return (
     <div className="w-full flex flex-col">
-      {isError && (
+      {(isError || prepareErrorMessage) && (
         <div className="bg-gray-100 rounded flex p-4 h-full items-center mb-2 border border-red-500 overflow-scroll">
-          <span className="title-font font-medium">{error?.message}</span>
+          <span className="title-font font-medium">
+            {error?.message || prepareErrorMessage}
+          </span>
         </div>
       )}
       <button
-        disabled={disabled || isLoading || !contractAddress}
+        disabled={disabled || isLoading || !contractAddress || isPrepareError}
         onClick={mintNFT}
         className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
       >
@@ -74,7 +97,7 @@ export const MintButton = (props: MintButtonProps) => {
               href={`https://${testNet}etherscan.io/tx/${data?.hash}`}
               className="text-blue-500 underline"
             >
-              Etherscan
+              View transaction on Etherscan
             </a>
           </span>
         </div>
