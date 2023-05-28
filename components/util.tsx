@@ -19,7 +19,7 @@ type GetURLProps = {
 };
 export function getUrl({ address, tx, network }: GetURLProps) {
   // `https://${testNet}etherscan.io/tx/${transactionHash}`
-
+  if (!address && !tx) return "";
   if (network === "maticmum") {
     return `https://mumbai.polygonscan.com/${tx ? "tx" : "address"}/${
       tx || address
@@ -44,13 +44,10 @@ export const getAttributesAsKeys = (nftMetadata: NFTMetadata | null) => {
   }, {}) as NFTAttributes;
 };
 
-export const getImagURIFromIPFS = (
-  ipfsHash: string,
-  fallback = "https://dummyimage.com/720x400"
-) => {
+export const getImagURIFromIPFS = (ipfsHash?: string) => {
+  if (!ipfsHash) return null;
   const hash = ipfsHash.replace("ipfs://", "");
   // @todo loading
-  if (!hash) return fallback;
 
   return `https://ipfs.io/ipfs/${hash}`;
 };
@@ -71,4 +68,15 @@ export const fetchData = async (ipfsHash: string) => {
     // Handle fetch error
   }
   return null;
+};
+
+export const trimHash = (
+  hash: `0x${string}` | string | null,
+  prefix: number,
+  suffix: number
+) => {
+  if (!hash) return "";
+  return (
+    hash.substring(0, prefix) + "..." + hash.substring(hash.length - suffix)
+  );
 };

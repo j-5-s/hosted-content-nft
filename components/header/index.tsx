@@ -7,7 +7,7 @@ type HeaderProps = {
 };
 export const Header = ({ children, step }: HeaderProps) => {
   return (
-    <div className="container mx-auto flex pt-5 flex-col sticky top-0 bg-white z-10">
+    <div className=" mx-auto flex pt-5 pb-2 flex-col sticky top-0 bg-white z-10">
       <div className="container mx-auto flex items-center justify-between mb-2">
         <div className="flex-1 mr-5">{children}</div>
         <div>
@@ -15,7 +15,7 @@ export const Header = ({ children, step }: HeaderProps) => {
         </div>
       </div>
       {step && (
-        <div className="mt-2 border-t border-gray-200 ">
+        <div className="mt- border-t border-gray-200 ">
           <Progress step={step} />
         </div>
       )}
