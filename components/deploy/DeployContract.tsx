@@ -34,7 +34,6 @@ export const DeployContract = () => {
   const { data, isLoading } = useWaitForTransaction({
     hash,
   });
-  console.log(walletClient, rest);
 
   useEffect(() => {
     if (data?.contractAddress && data?.transactionHash) {

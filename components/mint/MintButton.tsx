@@ -51,7 +51,7 @@ export const MintButton = (props: MintButtonProps) => {
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
-
+  // console.log(prepareError, "prepareError", error);
   const mintNFT = () => {
     write?.();
   };
@@ -68,7 +68,7 @@ export const MintButton = (props: MintButtonProps) => {
   return (
     <div className="w-full flex flex-col">
       {(isError || prepareErrorMessage) && (
-        <div className="bg-gray-100 rounded flex p-4 h-full items-center mb-2 border border-red-500 overflow-scroll">
+        <div className="bg-gray-100 rounded flex p-4 h-full items-center mb-2 border border-red-200 overflow-scroll text-xs">
           <span className="title-font font-medium">
             {error?.message || prepareErrorMessage}
           </span>

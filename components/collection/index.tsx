@@ -77,16 +77,18 @@ export const Collection = (props: CollectionProps) => {
           <div className="border-b border-gray-200 px-2 py-3 font-bold text-sm">
             Contract Overview
           </div>
-          <div className="py-4 text-sm">
-            <div className="flex px-2">
-              <div className="w-1/4 tracking-widest title-font">Balance</div>
-              <div className="w-3/4">{contractData?.balanceOf}</div>
+          <div className="py-4 text-sm flex">
+            <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+              <h2 className="title-font font-medium text-3xl text-gray-900">
+                {contractData?.balanceOf}
+              </h2>
+              <p className="leading-relaxed">Balance</p>
             </div>
-            <div className="flex px-2">
-              <div className="w-1/4 tracking-widest title-font">
-                Num. Contracts
-              </div>
-              <div className="w-3/4">{contractData?.totalTokens}</div>
+            <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+              <h2 className="title-font font-medium text-3xl text-gray-900">
+                {contractData?.totalTokens}
+              </h2>
+              <p className="leading-relaxed">Tokens</p>
             </div>
           </div>
         </div>
