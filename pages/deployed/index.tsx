@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useAccount } from "wagmi";
 import type { NextPage } from "next";
 import { Header } from "../../components/header";
 import { MetadataInstructions } from "../../components/deploy/MetadataInstructions";
@@ -8,6 +9,7 @@ import { useContract } from "../../hooks/useContract";
 import { db } from "../../db/db";
 
 const DeployedPage: NextPage = () => {
+  const { isConnected, address: userAddress } = useAccount();
   const transactionHash = getFirstQueryParam(
     "transactionHash"
   ) as AddressString;
@@ -21,7 +23,13 @@ const DeployedPage: NextPage = () => {
 
   useEffect(() => {
     (async () => {
-      if (data) {
+      if (
+        data &&
+        isConnected &&
+        contractAddress &&
+        userAddress &&
+        transactionHash
+      ) {
         try {
           const existingContract = await db.contracts.get({
             address: contractAddress,
@@ -29,6 +37,7 @@ const DeployedPage: NextPage = () => {
           if (!existingContract) {
             const id = await db.contracts.add({
               address: contractAddress as string,
+              user: userAddress as string,
               txHash: transactionHash as string,
               name: data.name,
               symbol: data.symbol,
@@ -44,7 +53,7 @@ const DeployedPage: NextPage = () => {
         }
       }
     })();
-  }, [data]);
+  }, [data, isConnected, userAddress, contractAddress, transactionHash]);
   return (
     <section className="text-gray-600 body-font flex flex-col min-h-screen">
       <Header step={3}>

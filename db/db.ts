@@ -2,6 +2,8 @@ import Dexie, { Table } from "dexie";
 
 export interface Contract {
   id?: number;
+  // The logged in user to wagmi
+  user: string;
   address: string;
   txHash: string;
   name: string;
@@ -19,8 +21,9 @@ export class J5SClassedDexie extends Dexie {
 
   constructor() {
     super("j5s");
+    // consider unique compound index - &[address+txHash]
     this.version(1).stores({
-      contracts: "++id, &address, txHash, name, symbol, creator, owner", // Primary key and indexed props
+      contracts: "++id, user, address, txHash, name, symbol, creator, owner", // Primary key and indexed props
     });
   }
 }
