@@ -22,11 +22,12 @@ export const Progress = (props: Props) => {
           target="_blank"
           rel="noreferrer"
           className={cs(
-            "sm:px-6 py-3 md:w-1/4 w-full justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
+            "sm:px-6 py-3 md:w-1/4 w-full justify-center sm:justify-start title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
             {
               "border-indigo-500": step === 1,
               "text-indigo-500": step === 1,
               "bg-gray-100": step === 1,
+              "border-b-2": step === 1,
             }
           )}
         >
@@ -46,11 +47,12 @@ export const Progress = (props: Props) => {
         <a
           href="/deploy"
           className={cs(
-            "sm:px-6 py-3  md:w-1/4 w-full  justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
+            "sm:px-6 py-3  md:w-1/4 w-full  justify-center sm:justify-start title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
             {
               "border-indigo-500": step === 2,
               "text-indigo-500": step === 2,
               "bg-gray-100": step === 2,
+              "border-b-2": step === 2,
             }
           )}
         >
@@ -70,11 +72,12 @@ export const Progress = (props: Props) => {
         <a
           href={deployed}
           className={cs(
-            "sm:px-6 py-3  md:w-1/4 w-full justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
+            "sm:px-6 py-3  md:w-1/4 w-full justify-center sm:justify-start title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
             {
               "border-indigo-500": step === 3,
               "text-indigo-500": step === 3,
               "bg-gray-100": step === 3,
+              "border-b-2": step === 3,
               "opacity-50": step < 3,
             }
           )}
@@ -95,10 +98,11 @@ export const Progress = (props: Props) => {
         </a>
         <a
           className={cs(
-            "sm:px-6 py-3  md:w-1/4 w-full justify-center sm:justify-start border-b-2 title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
+            "sm:px-6 py-3  md:w-1/4 w-full justify-center sm:justify-start title-font font-medium inline-flex items-center leading-none tracking-wider rounded-t",
             {
               "border-indigo-500": step === 4,
               "text-indigo-500": step === 4,
+              "border-b-2": step === 4,
               "bg-gray-100": step === 4,
               "opacity-50": step < 4,
             }

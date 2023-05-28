@@ -13,7 +13,7 @@ const Search: NextPage = () => {
     router.push(`/search?q=${value}`);
   };
   return (
-    <section className="text-gray-600 body-fon">
+    <section className="text-gray-600 body-font flex flex-col min-h-screen">
       <Header>
         <div className="relative flex-grow w-full">
           <input
@@ -27,7 +27,7 @@ const Search: NextPage = () => {
           />
         </div>
       </Header>
-      <div className="bg-gray-100">
+      <div className="bg-gray-100 flex-1">
         {!search && <div>todo default search</div>}
         {search && <Collection address={search} />}
       </div>

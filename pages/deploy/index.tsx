@@ -4,13 +4,11 @@ import { DeployContract } from "../../components/deploy/DeployContract";
 
 const DeployPage: NextPage = () => {
   return (
-    <section className="text-gray-600 body-font">
+    <section className="text-gray-600 body-font flex flex-col min-h-screen">
       <Header step={2}>
-        <h1 className="title-font sm:text-4xl text-3x font-medium text-gray-900">
-          Deploy New Contract
-        </h1>
+        <h1 className="">Deploy New Contract</h1>
       </Header>
-      <div className="container mx-auto flex pb-5 flex-col">
+      <div className="bg-gray-100 flex-1">
         <DeployContract />
       </div>
     </section>

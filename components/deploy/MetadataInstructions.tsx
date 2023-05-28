@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useNetwork } from "wagmi";
-import { getUrl } from "../util";
 
 type Props = {
   transactionHash?: `0x${string}`;
@@ -9,81 +9,30 @@ type Props = {
 
 export const MetadataInstructions = (props: Props) => {
   const network = useNetwork();
+  const [networkState, setNetworkState] = useState<string>();
   const { transactionHash, contractAddress } = props;
-  console.log(network);
   const metaTagHtml = `<meta name="nft_contract_address" content="${contractAddress}" />
 <meta name="nft_contract_network" content="${network?.chain?.network}" />`;
-  console.log(network);
-  const txLink = getUrl({
-    tx: transactionHash,
-    network: network?.chain?.network,
-  });
-  const addressLink = getUrl({
-    address: contractAddress,
-    network: network?.chain?.network,
-  });
-  // const testNet =
-  //   process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? "sepolia." : "";
+  useEffect(() => {
+    setNetworkState(network?.chain?.network);
+  }, [network?.chain?.network]);
   return (
     <div className="py-6">
-      <section className="text-gray-600 body-font">
-        <div className="container mx-auto flex  md:flex-row flex-col">
-          <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-            <p className="mb-4 leading-relaxed">
-              Install the below meta tags on your website.
-            </p>
-            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
-              Meta:
-            </h2>
-            <div className=" flex border-b border-gray-200 w-full items-center">
-              <span className="text-gray-500">name</span>
-              <span className="ml-auto text-gray-900 text-xs">
-                nft_contract_address
-              </span>
-            </div>
-            <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
-              <span className="text-gray-500">value</span>
-              <span className="ml-auto text-gray-900 text-xs">
-                {contractAddress}
-              </span>
-            </div>
-
-            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
-              Meta:
-            </h2>
-            <div className=" flex border-b border-gray-200 w-full items-center">
-              <span className="text-gray-500">name</span>
-              <span className="ml-auto text-gray-900 text-xs">
-                nft_contract_network
-              </span>
-            </div>
-            <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
-              <span className="text-gray-500">value</span>
-              <span className="ml-auto text-gray-900 text-xs">
-                {network?.chain?.network}
-              </span>
-            </div>
-
-            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">
-              Example
-            </h2>
-            <div className="flex justify-center flex-col w-full mb-8">
-              <textarea
-                value={metaTagHtml}
-                disabled
-                className="bg-gray-200 rounded p-2 w-full text-xs border border-gray-400"
-              />
-            </div>
-
+      <section>
+        <div className="container mx-auto flex flex-row bg-white p-4 border rounded mb-6">
+          <div className="w-1/2 flex flex-col items-center justify-center">
             <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
               Next Steps
             </h2>
-            <p className="mb-4">
-              After installing the metatag on your website, use the chrome
-              extension to capture a screenshot and get to step 4.
+            <p className="mb-4 text-center">
+              Visit any website and click the Chrome extension. You can create
+              an NFT with any contract that has been deployed, even if its not
+              yours.
             </p>
-            <div className="flex items-center w-full flex-col">
-              <div className="border border-gray-200 rounded">
+          </div>
+          <div className="w-1/2">
+            <div className="flex w-full flex-col items-end">
+              <div className="border border-gray-200 rounded mb-4 flex flex-col justify-end shadow">
                 <Image
                   width={500}
                   height={328}
@@ -94,46 +43,69 @@ export const MetadataInstructions = (props: Props) => {
               </div>
             </div>
           </div>
-
-          <div>
-            <div className="border border-gray-200 rounded mb-4">
-              <Image
-                width={500}
-                height={375}
-                className="object-cover object-center"
-                alt="hero"
-                src="/metatag.png"
-              />
-            </div>
-            <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
-              Save this contract information:
-            </h2>
-            <div className=" flex border-b border-gray-200 w-full items-center">
-              <span className="text-gray-500">Tx</span>
-              <span className="ml-auto text-gray-900 text-xs">
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={txLink}
-                  className="text-blue-500 underline"
-                >
-                  {transactionHash}
-                </a>
-              </span>
-            </div>
-            <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
-              <span className="text-gray-500">Address</span>
-              <span className="ml-auto text-gray-900 text-xs">
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={addressLink}
-                  className="text-blue-500 underline"
-                >
+        </div>
+        <div className="container mx-auto flex  md:flex-row flex-col bg-white p-4 border rounded mb-6">
+          <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+            <div className="w-full mb-12">
+              <p className="mb-4 leading-relaxed border-b">
+                Install the meta tag:
+              </p>
+              <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
+                Meta:
+              </h2>
+              <div className=" flex border-b border-gray-200 w-full items-center">
+                <span className="text-gray-500">name</span>
+                <span className="ml-auto text-gray-900 text-xs">
+                  nft_contract_address
+                </span>
+              </div>
+              <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
+                <span className="text-gray-500">value</span>
+                <span className="ml-auto text-gray-900 text-xs">
                   {contractAddress}
-                </a>
-              </span>
+                </span>
+              </div>
+
+              <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
+                Meta:
+              </h2>
+              <div className=" flex border-b border-gray-200 w-full items-center">
+                <span className="text-gray-500">name</span>
+                <span className="ml-auto text-gray-900 text-xs">
+                  nft_contract_network
+                </span>
+              </div>
+              <div className="flex border-b border-gray-200 py-2 w-full items-center mb-8">
+                <span className="text-gray-500">value</span>
+                <span className="ml-auto text-gray-900 text-xs">
+                  {networkState}
+                </span>
+              </div>
+              <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-1">
+                Example
+              </h2>
+              <div className="flex justify-center flex-col w-full mb-8">
+                <textarea
+                  value={metaTagHtml}
+                  disabled
+                  className="bg-gray-200 rounded p-2 w-full text-xs border border-gray-400"
+                />
+              </div>
+              <p className="text-center italic text-sm">
+                Adding the meta tag to your website will allow the chrome
+                extension to pre-populate the contract for your users.
+              </p>
             </div>
+          </div>
+
+          <div className="border border-gray-200 rounded mb-4 flex justify-end shadow">
+            <Image
+              width={500}
+              height={375}
+              className="object-cover object-center "
+              alt="hero"
+              src="/metatag.png"
+            />
           </div>
         </div>
       </section>

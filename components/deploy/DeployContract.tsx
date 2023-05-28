@@ -30,10 +30,11 @@ export const DeployContract = () => {
     };
   };
 
-  const { data: walletClient } = useWalletClient();
+  const { data: walletClient, ...rest } = useWalletClient();
   const { data, isLoading } = useWaitForTransaction({
     hash,
   });
+  console.log(walletClient, rest);
 
   useEffect(() => {
     if (data?.contractAddress && data?.transactionHash) {
@@ -67,14 +68,10 @@ export const DeployContract = () => {
   };
 
   return (
-    <div className="py-6">
+    <div className="py-6 container mx-auto">
       {network.chain?.unsupported && <Networks />}
       {!network.chain?.unsupported && (
-        <form
-          className="bg-gray-100 rounded-lg flex p-8 flex-col w-full "
-          onSubmit={handleSubmit}
-        >
-          {/* <h2 className="text-gray-900 text-lg font-medium title-font mb-5">Sign Up</h2> */}
+        <form className="flex flex-col w-full " onSubmit={handleSubmit}>
           <div className="relative mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">
               Name
