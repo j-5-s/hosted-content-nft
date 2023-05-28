@@ -42,6 +42,7 @@ export const useContract = (props: Props) => {
       },
     ],
   });
+
   const ret = {
     name: "",
     symbol: "",

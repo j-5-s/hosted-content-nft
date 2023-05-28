@@ -50,7 +50,7 @@ export const parseQueryParams = (query: QueryParams) => {
 
 const MintPage: NextPage<PageProps> = () => {
   const router = useRouter();
-  const { ipfsHash, wallets, contractAddress } = parseQueryParams(router.query);
+  const { ipfsHash, contractAddress } = parseQueryParams(router.query);
   const [nftMetadata, setNFTMetadata] = useState<NFTMetadata | null>(null);
   const [mounted, setMounted] = useState(false);
   const tokenURI: IpfsTokenURI = `ipfs://${ipfsHash}`;

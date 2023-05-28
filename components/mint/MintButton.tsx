@@ -13,6 +13,7 @@ type MintButtonProps = {
   tokenURI: string;
   disabled: boolean;
   url: string;
+  clone?: boolean;
 };
 
 type PrepareCause = {
@@ -31,7 +32,7 @@ const getErrorMessage = (error?: PrepareCause) => {
   return null;
 };
 export const MintButton = (props: MintButtonProps) => {
-  const { disabled, contractAddress, tokenURI, url } = props;
+  const { disabled, contractAddress, tokenURI, url, clone } = props;
   const network = useNetwork();
 
   const {
@@ -41,8 +42,8 @@ export const MintButton = (props: MintButtonProps) => {
   } = usePrepareContractWrite({
     address: contractAddress,
     abi: cloneableContract.abi,
-    functionName: "mintNFT",
-    args: [tokenURI, url],
+    functionName: clone ? "mintClone" : "mintNFT",
+    args: clone ? [1] : [tokenURI, url],
   });
 
   const { data, error, isError, write } = useContractWrite(config);
@@ -85,6 +86,7 @@ export const MintButton = (props: MintButtonProps) => {
         className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
       >
         {isLoading ? "Minting..." : "Mint"}
+        {clone ? " Clone" : ""}
       </button>
       {isSuccess && (
         <div className="bg-gray-100 rounded flex p-4 h-full items-center mt-2">

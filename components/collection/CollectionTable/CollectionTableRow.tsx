@@ -1,5 +1,5 @@
 import { useFetchNFT } from "../../../hooks/useFetchNFT";
-import { getImageURIFromIPFS, getAttributesAsKeys, getUrl } from "../../util";
+import { getAttributesAsKeys, getUrl, trimHash } from "../../util";
 
 type CollectionTableRowProps = {
   tokenId: bigint;
@@ -9,7 +9,7 @@ type CollectionTableRowProps = {
 
 export const CollectionTableRow = (props: CollectionTableRowProps) => {
   const { tokenId, contractAddress, network } = props;
-  const { data, loading, error } = useFetchNFT({
+  const { data, tokenURI, chainData, loading, error } = useFetchNFT({
     tokenId,
     contractAddress,
   });
@@ -22,7 +22,10 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
   const attributes = getAttributesAsKeys(data);
   const ts = attributes?.Timestamp;
   const date = ts ? new Date(ts).toLocaleString() : "";
-
+  const creatorLink = getUrl({
+    address: chainData?.creator,
+    network,
+  });
   return (
     <tr>
       <td className="px-4 py-3">
@@ -47,6 +50,29 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
       </td>
       <td className="px-4 py-">{attributes?.Title || ""}</td>
       <td className="px-4 py-3">{date}</td>
+      <td className="px-4 py-3">
+        <a
+          className="text-blue-500 hover:underline"
+          target="_blank"
+          rel="noreferrer"
+          href={tokenURI?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+        >
+          {trimHash(tokenURI, 11, 4)}
+        </a>
+      </td>
+      <td className="px-4 py-3">
+        <a
+          href={creatorLink}
+          className="text-blue-500 hover:underline"
+          rel="noreferrer"
+          target="_blank"
+        >
+          {trimHash(chainData.creator, 6, 4)}
+        </a>
+      </td>
+
+      <td className="px-4 py-3">{chainData?.isClone.toString()}</td>
+
       <td className="px-4 py-3">
         <a
           href={`/nft/${contractAddress}/${tokenId.toString()}`}

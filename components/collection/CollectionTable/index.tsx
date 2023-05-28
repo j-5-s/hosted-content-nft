@@ -22,6 +22,15 @@ export const CollectionTable = (props: CollectionTableProps) => {
             Date
           </th>
           <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+            IPFS
+          </th>
+          <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+            Creator
+          </th>
+          <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+            Is Clone
+          </th>
+          <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
             Actions
           </th>
         </tr>

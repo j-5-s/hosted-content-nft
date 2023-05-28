@@ -1,11 +1,13 @@
 import { ChangeEvent } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Header } from "../components/header";
-import { getFirstQueryParam } from "../components/util";
-const Home: NextPage = () => {
+import { Header } from "../../components/header";
+import { Collection } from "../../components/collection";
+import { getFirstQueryParam } from "../../components/util";
+
+const Search: NextPage = () => {
   const router = useRouter();
-  const search = getFirstQueryParam("search");
+  const search = getFirstQueryParam("q");
   const updateSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     router.push(`/search?q=${value}`);
@@ -26,10 +28,11 @@ const Home: NextPage = () => {
         </div>
       </Header>
       <div className="bg-gray-100">
-        {!search && <div>todo default home</div>}
+        {!search && <div>todo default search</div>}
+        {search && <Collection address={search} />}
       </div>
     </section>
   );
 };
 
-export default Home;
+export default Search;

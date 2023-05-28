@@ -1,4 +1,4 @@
-import { EventHandler } from "react";
+import { EventHandler, useState } from "react";
 import { useContractRead, useWalletClient, useNetwork } from "wagmi";
 import contract from "../mint/CloneableContract.json";
 import { NFTCard } from "./NFTCard";
@@ -21,19 +21,26 @@ export const Collection = (props: CollectionProps) => {
   const { address } = props;
   const { data: walletClient } = useWalletClient();
   const network = useNetwork();
+  const [myItemsFilter, setMyItemsFilter] = useState(false);
 
   const { data }: ContractData = useContractRead({
     address: address as `0x${string}`,
     abi: contract.abi,
-    args: [walletClient?.account.address],
-    functionName: "getOwnedTokens",
-    enabled: !!(address && walletClient?.account.address),
+    args: myItemsFilter ? [walletClient?.account.address] : [],
+    functionName: myItemsFilter ? "getOwnedTokens" : "getAllMintedTokens",
+    enabled: myItemsFilter
+      ? !!(address && walletClient?.account.address)
+      : !!address,
   });
+
+  const filterAllItems = (value: boolean) => {
+    setMyItemsFilter(value);
+  };
 
   const {
     data: contractData,
     error,
-    isLoading,
+    // isLoading,
   } = useContract({
     address: address as `0x${string}`,
   });
@@ -88,6 +95,14 @@ export const Collection = (props: CollectionProps) => {
             More Info
           </div>
           <div className="py-4 px-2 text-sm">
+            <div className="flex p-2  border-b border-gray-100 mb-2 ">
+              <div className="w-1/4 tracking-widest title-font ">
+                Name (symbol)
+              </div>
+              <div className="w-3/4 text-xs flex items-end">
+                {contractData?.name} ({contractData?.symbol})
+              </div>
+            </div>
             <div className="flex p-2 border-b border-gray-100 mb-2">
               <div className="w-1/4 tracking-widest title-font">
                 Contract Creator
@@ -118,23 +133,31 @@ export const Collection = (props: CollectionProps) => {
                 </a>
               </div>
             </div>
-            <div className="flex p-2  border-b border-gray-100 mb-2 ">
-              <div className="w-1/4 tracking-widest title-font">
-                Name (symbol)
-              </div>
-              <div className="w-3/4 text-xs">
-                {contractData?.name} ({contractData?.symbol})
-              </div>
-            </div>
           </div>
         </div>
       </div>
       <div className="flex -m-4">
         <Tabs
           defaultTab="list"
-          className="flex-1 bg-white rounded border border-gray-200 m-4"
+          className="flex-1 bg-white rounded border border-gray-200 m-4 pb-4"
         >
-          <TabHeader>
+          <TabHeader
+            actions={() => {
+              return (
+                <div className="flex items-center">
+                  <input
+                    onChange={(evt) => filterAllItems(evt.target.checked)}
+                    type="checkbox"
+                    id="all-contracts"
+                    className="mr-1"
+                  />
+                  <label htmlFor="all-contracts" className="text-xs">
+                    My Tokens
+                  </label>
+                </div>
+              );
+            }}
+          >
             <Tab id="list">Token List</Tab>
             <Tab id="cards">Token Cards</Tab>
           </TabHeader>

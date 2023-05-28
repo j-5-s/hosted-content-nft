@@ -22,6 +22,7 @@ export const Mint = ({
   const { switchNetwork, chains } = useSwitchNetwork();
   const [mounted, setMounted] = useState(false);
   const netQueryParam = getFirstQueryParam("network");
+  const cloneParam = getFirstQueryParam("clone") === "true";
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -129,6 +130,7 @@ export const Mint = ({
             disabled={!mounted || !isConnected}
             contractAddress={value.contractAddress as Address}
             tokenURI={tokenURI}
+            clone={cloneParam}
             url={value.url}
           />
         </div>
