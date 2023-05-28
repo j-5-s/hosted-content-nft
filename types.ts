@@ -11,7 +11,7 @@ export type NFTMetadata = {
 };
 
 export type NFTAttributes = {
-  title: string;
+  Title: string;
   URL: string;
   Timestamp: string;
   Text: string;

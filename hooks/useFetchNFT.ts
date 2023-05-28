@@ -28,6 +28,7 @@ export const useFetchNFT = (props: Props) => {
     abi: contract.abi,
     args: [tokenId],
     functionName: "tokenURI",
+    staleTime: 1000 * 60 * 5,
     enabled: !!(contractAddress && tokenId),
   });
 

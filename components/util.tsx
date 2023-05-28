@@ -16,23 +16,34 @@ type GetURLProps = {
   address?: string | `0x${string}`;
   tx?: string;
   network?: string;
+  token?: string;
 };
-export function getUrl({ address, tx, network }: GetURLProps) {
+export function getUrl({ address, tx, network, token }: GetURLProps) {
   // `https://${testNet}etherscan.io/tx/${transactionHash}`
-  if (!address && !tx) return "";
-  if (network === "maticmum") {
-    return `https://mumbai.polygonscan.com/${tx ? "tx" : "address"}/${
-      tx || address
-    }`;
-  } else if (network === "matic") {
-    return `https://polygonscan.com/${tx ? "tx" : "address"}/${tx || address}`;
-  } else if (network === "sepolia") {
-    return `https://${network}.etherscan.io/${
-      tx ? "tx" : "address"
-    }/${address}`;
-  } else if (network === "ethereum") {
-    return `https://etherscan.io/${tx ? "tx" : "address"}/${address}`;
+  let context;
+  if (tx) {
+    context = "tx";
+  } else if (token) {
+    context = "token";
+  } else {
+    context = "address";
   }
+  if (!address && !tx) return "";
+  let url;
+  if (network === "maticmum") {
+    url = `https://mumbai.polygonscan.com/${context}/${tx || address}`;
+  } else if (network === "matic") {
+    url = `https://polygonscan.com/${context}/${tx || address}`;
+  } else if (network === "sepolia") {
+    url = `https://${network}.etherscan.io/${context}/${address}`;
+  } else if (network === "ethereum") {
+    url = `https://etherscan.io/${context}/${address}`;
+  }
+  if (token) {
+    url += "?a=" + token;
+  }
+
+  return url;
 }
 
 export const getAttributesAsKeys = (nftMetadata: NFTMetadata | null) => {
@@ -44,7 +55,7 @@ export const getAttributesAsKeys = (nftMetadata: NFTMetadata | null) => {
   }, {}) as NFTAttributes;
 };
 
-export const getImagURIFromIPFS = (ipfsHash?: string) => {
+export const getImageURIFromIPFS = (ipfsHash?: string) => {
   if (!ipfsHash) return null;
   const hash = ipfsHash.replace("ipfs://", "");
   // @todo loading

@@ -25,7 +25,9 @@ const getErrorMessage = (error?: PrepareCause) => {
     if (error.reason === "Ownable: caller is not the owner") {
       return "Only the contract owner may call the mint function";
     }
+    return error.reason;
   }
+
   return null;
 };
 export const MintButton = (props: MintButtonProps) => {

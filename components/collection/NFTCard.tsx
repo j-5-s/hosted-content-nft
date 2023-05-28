@@ -1,5 +1,5 @@
 import { useFetchNFT } from "../../hooks/useFetchNFT";
-import { getImagURIFromIPFS, getAttributesAsKeys } from "../util";
+import { getImageURIFromIPFS, getAttributesAsKeys } from "../util";
 
 type Props = {
   tokenId: bigint;
@@ -11,7 +11,7 @@ export const NFTCard = ({ tokenId, contractAddress }: Props) => {
     contractAddress,
   });
 
-  const imageURI = getImagURIFromIPFS(data?.image);
+  const imageURI = getImageURIFromIPFS(data?.image);
   const attributes = getAttributesAsKeys(data);
   const ts = attributes?.Timestamp;
   const date = new Date(ts).toLocaleString();

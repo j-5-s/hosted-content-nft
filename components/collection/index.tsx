@@ -1,9 +1,14 @@
+import { EventHandler } from "react";
 import { useContractRead, useWalletClient, useNetwork } from "wagmi";
 import contract from "../mint/CloneableContract.json";
 import { NFTCard } from "./NFTCard";
 import { getUrl, trimHash } from "../util";
 import { Copy } from "../icons/copy";
 import { useContract } from "../../hooks/useContract";
+import { CollectionTable } from "./CollectionTable";
+import { CollectionTableRow } from "./CollectionTable/CollectionTableRow";
+import { Tabs, Tab, TabHeader, TabBody, TabContent } from "../tabs";
+import { CollectionError } from "./CollectionError";
 type CollectionProps = {
   address?: string;
 };
@@ -25,19 +30,28 @@ export const Collection = (props: CollectionProps) => {
     enabled: !!(address && walletClient?.account.address),
   });
 
-  const { data: contractData } = useContract({
+  const {
+    data: contractData,
+    error,
+    isLoading,
+  } = useContract({
     address: address as `0x${string}`,
   });
 
   const contractLink = getUrl({
-    address: address,
+    address: contractData?.creator,
     network: network?.chain?.network,
   });
 
-  // const addressLink = getUrl({
-  //   address: address,
-  //   network: network?.chain?.network,
-  // });
+  const addressLink = getUrl({
+    address: address,
+    network: network?.chain?.network,
+  });
+  //0xa578f91257d06f83d373f717dfb7ddfb335317d6
+
+  if (error) {
+    return <CollectionError message={error} />;
+  }
 
   return (
     <div className="container py-6 mx-auto">
@@ -59,7 +73,7 @@ export const Collection = (props: CollectionProps) => {
           <div className="py-4 text-sm">
             <div className="flex px-2">
               <div className="w-1/4 tracking-widest title-font">Balance</div>
-              <div className="w-3/4">0 Matic</div>
+              <div className="w-3/4">{contractData?.balanceOf}</div>
             </div>
             <div className="flex px-2">
               <div className="w-1/4 tracking-widest title-font">
@@ -79,41 +93,78 @@ export const Collection = (props: CollectionProps) => {
                 Contract Creator
               </div>
               <div className="w-3/4">
-                <a className="text-blue-500 hover:underline text-xs" href="#">
-                  {trimHash("0x66c2801e144a0ba4d7f6aff62f535f312aaf609a", 6, 4)}
-                </a>{" "}
-                at txn{" "}
-                <a className="text-blue-500 hover:underline text-xs" href="#">
-                  {trimHash(
-                    "0x66c2801e144a0ba4d7f6aff62f535f312aaf609a",
-                    10,
-                    6
-                  )}
+                <a
+                  href={contractLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-500 hover:underline text-xs"
+                >
+                  {contractData?.creator}
+                </a>
+              </div>
+            </div>
+            <div className="flex p-2 border-b border-gray-100 mb-2">
+              <div className="w-1/4 tracking-widest title-font">
+                Contract Address
+              </div>
+              <div className="w-3/4">
+                <a
+                  href={addressLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-500 hover:underline text-xs"
+                >
+                  {address}
                 </a>
               </div>
             </div>
             <div className="flex p-2  border-b border-gray-100 mb-2 ">
               <div className="w-1/4 tracking-widest title-font">
-                Token Tracker
+                Name (symbol)
               </div>
-              <div className="w-3/4">
-                <a className="text-blue-500 hover:underline text-xs" href="#">
-                  {contractData?.name} ({contractData?.symbol})
-                </a>
+              <div className="w-3/4 text-xs">
+                {contractData?.name} ({contractData?.symbol})
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="flex flex-wrap -mx-4">
-        {data?.map((tokenId) => (
-          <NFTCard
-            key={tokenId.toString()}
-            tokenId={tokenId}
-            contractAddress={address as `0x${string}`}
-          />
-        ))}
+      <div className="flex -m-4">
+        <Tabs
+          defaultTab="list"
+          className="flex-1 bg-white rounded border border-gray-200 m-4"
+        >
+          <TabHeader>
+            <Tab id="list">Token List</Tab>
+            <Tab id="cards">Token Cards</Tab>
+          </TabHeader>
+          <TabContent className="text-sm px-3">
+            <TabBody id="list">
+              <CollectionTable
+                tokens={data}
+                renderRow={(tokenId) => (
+                  <CollectionTableRow
+                    key={tokenId.toString()}
+                    contractAddress={address as `0x${string}`}
+                    tokenId={tokenId}
+                    network={network?.chain?.network}
+                  />
+                )}
+              />
+            </TabBody>
+            <TabBody id="cards">
+              <div className="flex flex-wrap -mx-4 -mt-4">
+                {data?.map((tokenId) => (
+                  <NFTCard
+                    key={tokenId.toString()}
+                    tokenId={tokenId}
+                    contractAddress={address as `0x${string}`}
+                  />
+                ))}
+              </div>
+            </TabBody>
+          </TabContent>
+        </Tabs>
       </div>
     </div>
   );

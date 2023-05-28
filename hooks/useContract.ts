@@ -12,7 +12,7 @@ export const useContract = (props: Props) => {
     abi: contract.abi,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
-
+  let errorMsg;
   const { data, error, isLoading } = useContractReads({
     enabled: !!address,
     contracts: [
@@ -36,6 +36,10 @@ export const useContract = (props: Props) => {
         ...contractInput,
         functionName: "getTotalMintedTokens",
       },
+      {
+        ...contractInput,
+        functionName: "getContractCreator",
+      },
     ],
   });
   const ret = {
@@ -44,6 +48,7 @@ export const useContract = (props: Props) => {
     owner: "",
     balanceOf: 0,
     totalTokens: "",
+    creator: "",
   };
   if (data) {
     ret.name = data[0].result as unknown as string;
@@ -55,10 +60,19 @@ export const useContract = (props: Props) => {
     }
     const totalTokens = data[4].result as unknown as bigint;
     ret.totalTokens = totalTokens?.toString();
+
+    ret.creator = data[5].result as unknown as string;
   }
+
+  // @todo better error handling.
+  const errors = data?.filter((d) => d.status === "failure");
+  if (errors?.length === data?.length && data?.length) {
+    errorMsg = "Contract not found";
+  }
+
   return {
     data: data ? ret : undefined,
-    error,
+    error: errorMsg,
     isLoading,
   };
 };

@@ -17,6 +17,7 @@ const Home: NextPage = () => {
         <div className="relative flex-grow w-full">
           <input
             onChange={updateSearch}
+            value={search}
             type="text"
             id="search"
             name="search"
