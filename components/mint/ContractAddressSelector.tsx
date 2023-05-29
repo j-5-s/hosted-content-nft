@@ -43,14 +43,16 @@ export const ContractAddressSelector = (props: Props) => {
   return (
     <div className="flex items-center">
       <div className="text-xs mr-2 flex items-end">
-        <a
-          target="_blank"
-          rel="noreferrer"
-          className="text-blue-500 hover:underline"
-          href={contractLink}
-        >
-          {chain?.name} ({chain?.symbol})
-        </a>
+        {chain && (
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-500 hover:underline"
+            href={contractLink}
+          >
+            {chain?.name} ({chain?.symbol})
+          </a>
+        )}
       </div>
       <select
         value={selectedValue}

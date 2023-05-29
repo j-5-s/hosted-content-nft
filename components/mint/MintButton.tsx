@@ -130,7 +130,7 @@ export const MintButton = (props: MintButtonProps) => {
   const prepareErrorMessage = getErrorMessage(
     prepareError?.cause as PrepareCause
   );
-
+  console.log(clone, tokenId);
   let altError = "";
   if (clone && !tokenId) {
     altError = "Token does not exist to clone";

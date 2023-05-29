@@ -38,7 +38,7 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
           [{tokenId.toString()}]
         </a>
       </td>
-      <td className="px-4 py-3">
+      <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
         <a
           target="_blank"
           rel="noreferrer"
@@ -48,8 +48,12 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
           {attributes?.URL || ""}
         </a>
       </td>
-      <td className="px-4 py-">{attributes?.Title || ""}</td>
-      <td className="px-4 py-3">{date}</td>
+      <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
+        {attributes?.Title || ""}
+      </td>
+      <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
+        {date}
+      </td>
       <td className="px-4 py-3">
         <a
           className="text-blue-500 hover:underline"

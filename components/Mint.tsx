@@ -91,21 +91,7 @@ export const Mint = ({
               value={value.text}
             />
           </div>
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Contract Address</span>
-            <div className="ml-auto text-gray-900 flex">
-              <ContractAddressSelector
-                defaultValue={value?.contractAddress}
-                onChange={handleContractChange}
-              />
-            </div>
-          </div>
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Network</span>
-            <div className="ml-auto text-gray-900 text-xs flex items-center">
-              {network?.chain?.network}
-            </div>
-          </div>
+
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Metadata (IPFS)</span>
             <span className="ml-auto text-gray-900">
@@ -140,7 +126,22 @@ export const Mint = ({
           change the html of the page the NFT will be different.
         </p>
 
-        <div className="flex w-full">
+        <div className="flex w-full flex-col">
+          <div className="flex border-t border-gray-200 py-2">
+            <span className="text-gray-500">Network</span>
+            <div className="ml-auto text-gray-900 text-xs flex items-center">
+              {network?.chain?.network}
+            </div>
+          </div>
+          <div className="flex border-t border-gray-200 py-2">
+            <span className="text-gray-500">Contract Address</span>
+            <div className="ml-auto text-gray-900 flex">
+              <ContractAddressSelector
+                defaultValue={value?.contractAddress}
+                onChange={handleContractChange}
+              />
+            </div>
+          </div>
           <MintButton
             disabled={!mounted || !isConnected}
             contractAddress={selectedContract as Address}
