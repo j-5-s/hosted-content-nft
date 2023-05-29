@@ -23,7 +23,8 @@ export class J5SClassedDexie extends Dexie {
     super("j5s");
     // consider unique compound index - &[address+txHash]
     this.version(1).stores({
-      contracts: "++id, user, address, txHash, name, symbol, creator, owner", // Primary key and indexed props
+      contracts:
+        "++id, user, address, txHash, name, symbol, creator, owner, &[address+user]", // Primary key and indexed props
     });
   }
 }
