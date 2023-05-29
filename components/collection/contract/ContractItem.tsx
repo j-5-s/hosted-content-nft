@@ -8,7 +8,7 @@ export const ContractItem = (props: ContractItemProps) => {
   const { contract } = props;
   const ts = new Date(contract.createdAt).toLocaleString();
   return (
-    <div className="py-8 flex flex-wrap md:flex-nowrap bg-white px-4 border rounded shadow">
+    <div className="py-8 flex flex-wrap md:flex-nowrap bg-white px-4 border rounded shadow mb-2">
       <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
         <span className="font-semibold title-font text-gray-700">
           {contract.network}
