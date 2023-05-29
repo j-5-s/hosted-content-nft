@@ -1,8 +1,12 @@
 import { ChangeEvent } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Header } from "../components/header";
 import { getFirstQueryParam } from "../components/util";
+import { db } from "../db/db";
+import { ContractItem } from "../components/collection/contract/ContractItem";
+
 const Home: NextPage = () => {
   const router = useRouter();
   const search = getFirstQueryParam("search");
@@ -10,6 +14,8 @@ const Home: NextPage = () => {
     const { value } = e.target;
     router.push(`/search?q=${value}`);
   };
+  const contracts = useLiveQuery(() => db.contracts.toArray());
+
   return (
     <section className="text-gray-600 body-fon">
       <Header>
@@ -26,7 +32,15 @@ const Home: NextPage = () => {
         </div>
       </Header>
       <div className="bg-gray-100">
-        {!search && <div>todo default home</div>}
+        <section className="text-gray-600 body-font overflow-hidden">
+          <div className="container py-24 mx-auto">
+            <div className="-my-8 divide-y-2 divide-gray-200">
+              {contracts?.map((contract, index) => (
+                <ContractItem key={index} contract={contract} />
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   );

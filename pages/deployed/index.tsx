@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import type { NextPage } from "next";
 import { Header } from "../../components/header";
 import { MetadataInstructions } from "../../components/deploy/MetadataInstructions";
@@ -10,6 +10,7 @@ import { db } from "../../db/db";
 
 const DeployedPage: NextPage = () => {
   const { isConnected, address: userAddress } = useAccount();
+  const network = useNetwork();
   const transactionHash = getFirstQueryParam(
     "transactionHash"
   ) as AddressString;
@@ -24,11 +25,12 @@ const DeployedPage: NextPage = () => {
   useEffect(() => {
     (async () => {
       if (
-        data &&
+        data?.name &&
         isConnected &&
         contractAddress &&
         userAddress &&
-        transactionHash
+        transactionHash &&
+        network?.chain?.network
       ) {
         try {
           const existingContract = await db.contracts.get({
@@ -40,9 +42,12 @@ const DeployedPage: NextPage = () => {
               user: userAddress as string,
               txHash: transactionHash as string,
               name: data.name,
+              network: network.chain.network,
               symbol: data.symbol,
               creator: data.creator,
               owner: data.owner,
+              description: data.description,
+              createdAt: data.createdAt,
             });
             console.log(id, "added to db");
           } else {
@@ -53,7 +58,14 @@ const DeployedPage: NextPage = () => {
         }
       }
     })();
-  }, [data, isConnected, userAddress, contractAddress, transactionHash]);
+  }, [
+    data,
+    isConnected,
+    userAddress,
+    contractAddress,
+    transactionHash,
+    network?.chain?.network,
+  ]);
   return (
     <section className="text-gray-600 body-font flex flex-col min-h-screen">
       <Header step={3}>

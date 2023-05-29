@@ -40,6 +40,14 @@ export const useContract = (props: Props) => {
         ...contractInput,
         functionName: "getContractCreator",
       },
+      {
+        ...contractInput,
+        functionName: "description",
+      },
+      {
+        ...contractInput,
+        functionName: "creationTime",
+      },
     ],
   });
 
@@ -50,6 +58,8 @@ export const useContract = (props: Props) => {
     balanceOf: 0,
     totalTokens: "",
     creator: "",
+    description: "",
+    createdAt: 0,
   };
   if (data) {
     ret.name = data[0].result as unknown as string;
@@ -63,11 +73,13 @@ export const useContract = (props: Props) => {
     ret.totalTokens = totalTokens?.toString();
 
     ret.creator = data[5].result as unknown as string;
+    ret.description = data[6].result as unknown as string;
+    ret.createdAt = Number(data[7].result as unknown as bigint) * 1000;
   }
 
   // @todo better error handling.
-  const errors = data?.filter((d) => d.status === "failure");
-  if (errors?.length === data?.length && data?.length) {
+  const status = data?.[0].status as unknown as string;
+  if (status === "failure") {
     errorMsg = "Contract not found";
   }
 

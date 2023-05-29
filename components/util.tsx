@@ -35,9 +35,9 @@ export function getUrl({ address, tx, network, token }: GetURLProps) {
   } else if (network === "matic") {
     url = `https://polygonscan.com/${context}/${tx || address}`;
   } else if (network === "sepolia") {
-    url = `https://${network}.etherscan.io/${context}/${address}`;
+    url = `https://${network}.etherscan.io/${context}/${tx || address}`;
   } else if (network === "ethereum") {
-    url = `https://etherscan.io/${context}/${address}`;
+    url = `https://etherscan.io/${context}/${tx || address}`;
   }
   if (token) {
     url += "?a=" + token;

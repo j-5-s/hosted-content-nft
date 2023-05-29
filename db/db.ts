@@ -10,6 +10,9 @@ export interface Contract {
   symbol: string;
   creator: string;
   owner: string;
+  network: string;
+  description: string;
+  createdAt: number;
 }
 
 // export const db = new Dexie("j5s");
@@ -21,10 +24,9 @@ export class J5SClassedDexie extends Dexie {
 
   constructor() {
     super("j5s");
-    // consider unique compound index - &[address+txHash]
     this.version(1).stores({
       contracts:
-        "++id, user, address, txHash, name, symbol, creator, owner, &[address+user]", // Primary key and indexed props
+        "++id, user, address, txHash, name, symbol, creator, owner, network, description, createdAt, &[address+user]", // Primary key and indexed props
     });
   }
 }

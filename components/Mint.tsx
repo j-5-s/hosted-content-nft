@@ -4,6 +4,8 @@ import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 import { SlowImageLoader } from "./image/SlowImageLoader";
 import { getFirstQueryParam, getUrl } from "./util";
+import { ContractAddressSelector } from "./mint/ContractAddressSelector";
+import type { Contract } from "../db/db";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -23,18 +25,19 @@ export const Mint = ({
   const [mounted, setMounted] = useState(false);
   const netQueryParam = getFirstQueryParam("network");
   const cloneParam = getFirstQueryParam("clone") === "true";
+  const [selectedContract, setSelectedContract] = useState("");
   useEffect(() => {
     setMounted(true);
   }, []);
   const net = network.chain?.network;
-  useEffect(() => {
-    if (net !== netQueryParam && switchNetwork) {
-      const chain = chains.find((chain) => chain.network === netQueryParam);
-      if (chain) {
-        switchNetwork(chain.id);
-      }
-    }
-  }, [net, netQueryParam, switchNetwork, chains]);
+  // useEffect(() => {
+  //   if (net !== netQueryParam && switchNetwork) {
+  //     const chain = chains.find((chain) => chain.network === netQueryParam);
+  //     if (chain) {
+  //       switchNetwork(chain.id);
+  //     }
+  //   }
+  // }, [net, netQueryParam, switchNetwork, chains]);
 
   const attributes = nftMetadata.attributes.reduce((acc, cur) => {
     return {
@@ -54,10 +57,20 @@ export const Mint = ({
     contractAddress,
   };
 
-  const contractLink = getUrl({
-    address: value?.contractAddress,
-    network: network.chain?.network,
-  });
+  // const contractLink = getUrl({
+  //   address: value?.contractAddress,
+  //   network: network.chain?.network,
+  // });
+
+  const handleContractChange = (contract: Contract | undefined) => {
+    setSelectedContract(contract?.address || "");
+    if (contract?.network) {
+      const chain = chains.find((chain) => chain.network === contract.network);
+      if (chain && switchNetwork) {
+        switchNetwork(chain.id);
+      }
+    }
+  };
   const dateTime = mounted ? new Date(value.timestamp).toLocaleString() : "";
 
   return (
@@ -87,22 +100,18 @@ export const Mint = ({
           </div>
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Contract Address</span>
-            <span className="ml-auto text-gray-900">
-              <a
-                target="_blank"
-                rel="nofollow noreferrer"
-                href={contractLink}
-                className="text-blue-500 hover:underline text-xs"
-              >
-                {value?.contractAddress}
-              </a>
-            </span>
+            <div className="ml-auto text-gray-900 flex">
+              <ContractAddressSelector
+                defaultValue={value?.contractAddress}
+                onChange={handleContractChange}
+              />
+            </div>
           </div>
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Network</span>
-            <span className="ml-auto text-gray-900 text-xs">
-              {netQueryParam}
-            </span>
+            <div className="ml-auto text-gray-900 text-xs flex items-center">
+              {network?.chain?.network}
+            </div>
           </div>
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Metadata (IPFS)</span>
@@ -141,7 +150,7 @@ export const Mint = ({
         <div className="flex w-full">
           <MintButton
             disabled={!mounted || !isConnected}
-            contractAddress={value.contractAddress as Address}
+            contractAddress={selectedContract as Address}
             tokenURI={tokenURI}
             clone={cloneParam}
             url={value.url}

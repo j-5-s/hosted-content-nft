@@ -1,6 +1,5 @@
 import { FormEvent, useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/router";
-import { contractText } from "./contract-text";
 import { useWalletClient, useWaitForTransaction, useNetwork } from "wagmi";
 import CloneableContract from "../mint/CloneableContract.json";
 import { Networks } from "./Networks";
@@ -8,6 +7,7 @@ import { Networks } from "./Networks";
 type ContractArguments = {
   name: string;
   token: string;
+  description: string;
 };
 
 export const DeployContract = () => {
@@ -19,10 +19,13 @@ export const DeployContract = () => {
   const [contract, setContract] = useState<ContractArguments>({
     name: "",
     token: "",
+    description: "",
   });
 
-  const handleInputField = (key: "name" | "token") => {
-    return (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleInputField = (key: "name" | "token" | "description") => {
+    return (
+      evt: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+    ) => {
       setContract((prev) => ({
         ...prev,
         [key]: evt?.target.value,
@@ -30,7 +33,7 @@ export const DeployContract = () => {
     };
   };
 
-  const { data: walletClient, ...rest } = useWalletClient();
+  const { data: walletClient } = useWalletClient();
   const { data, isLoading } = useWaitForTransaction({
     hash,
   });
@@ -42,6 +45,7 @@ export const DeployContract = () => {
       );
     }
   }, [data?.contractAddress, data?.transactionHash]);
+
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (contract.name && contract.token) {
@@ -51,7 +55,7 @@ export const DeployContract = () => {
         const hash = await walletClient?.deployContract({
           abi: CloneableContract.abi,
           account: walletClient.account,
-          args: [contract.name, contract.token],
+          args: [contract.name, contract.token, contract.description],
           bytecode: CloneableContract.bytecode as `0x${string}`,
         });
 
@@ -110,20 +114,20 @@ export const DeployContract = () => {
               htmlFor="full-name"
               className="leading-7 text-sm text-gray-600"
             >
-              Contract Template
+              Description
             </label>
 
             <textarea
-              rows={30}
-              id="full-name"
-              name="full-name"
-              className="opacity-50 leading-4 text-xs w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-gray-700 py-1 px-3 transition-colors duration-200 ease-in-out"
-              value={contractText}
-              disabled
+              rows={6}
+              value={contract.description}
+              onChange={handleInputField("description")}
+              id="description"
+              name="description"
+              className="leading-4 text-xs w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-gray-700 py-1 px-3 transition-colors duration-200 ease-in-out"
             />
           </div>
           {error && (
-            <div className="bg-gray-100 rounded flex p-4 h-full items-center mb-2 border border-red-500 overflow-scroll">
+            <div className=" rounded flex p-4 h-full items-center mb-2 border border-red-200 bg-white overflow-scroll">
               <span className="title-font font-medium">{error}</span>
             </div>
           )}
