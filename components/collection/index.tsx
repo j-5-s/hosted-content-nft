@@ -65,6 +65,10 @@ export const Collection = (props: CollectionProps) => {
     return <FullPageMessaging loading />;
   }
 
+  const ts = contractData?.createdAt
+    ? new Date(contractData?.createdAt).toLocaleString()
+    : "";
+
   return (
     <div className="container py-6 mx-auto">
       <div className="flex items-center mb-2">
@@ -131,9 +135,7 @@ export const Collection = (props: CollectionProps) => {
             </div>
             <div className="flex p-2 border-b border-gray-100 mb-2">
               <div className="w-1/4 tracking-widest title-font">Created At</div>
-              <div className="w-3/4">
-                {new Date(contractData?.createdAt).toLocaleString()}
-              </div>
+              <div className="w-3/4">{ts}</div>
             </div>
           </div>
         </div>

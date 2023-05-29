@@ -13,7 +13,7 @@ export const useContract = (props: Props) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
   let errorMsg;
-  const { data, error, isLoading } = useContractReads({
+  const { data, isLoading } = useContractReads({
     enabled: !!address,
     contracts: [
       {
