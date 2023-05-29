@@ -82,7 +82,7 @@ export const Collection = (props: CollectionProps) => {
         </button>
       </div>
       <div className="flex -m-4">
-        <div className="flex-1 bg-white rounded border border-gray-200 m-4">
+        <div className="flex-1 bg-white rounded border border-gray-200 m-4 shadow">
           <div className="border-b border-gray-200 px-2 py-3 font-bold text-sm">
             {contractData?.name} ({contractData?.symbol})
           </div>
@@ -90,7 +90,7 @@ export const Collection = (props: CollectionProps) => {
             <p>{contractData?.description}</p>
           </div>
         </div>
-        <div className="flex-1 bg-white rounded border border-gray-200 m-4">
+        <div className="flex-1 bg-white rounded border border-gray-200 m-4 shadow">
           <div className="border-b border-gray-200 px-2 py-3 font-bold text-sm">
             More Info
           </div>
@@ -143,7 +143,7 @@ export const Collection = (props: CollectionProps) => {
       <div className="flex -m-4">
         <Tabs
           defaultTab="list"
-          className="flex-1 bg-white rounded border border-gray-200 m-4 pb-4"
+          className="flex-1 bg-white rounded border border-gray-200 m-4 pb-4 shadow"
         >
           <TabHeader
             actions={() => {
