@@ -180,6 +180,6 @@ export const useContract = (props: Props): ReturnData => {
   return {
     data: data ? ret : undefined,
     error: errorMsg,
-    isLoading,
+    loading: isLoading,
   };
 };
