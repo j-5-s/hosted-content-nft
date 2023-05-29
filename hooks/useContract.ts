@@ -5,7 +5,7 @@ import contract from "../components/mint/CloneableContract.json";
 
 type Props = {
   address?: `0x${string}` | undefined;
-  imports: boolean;
+  imports?: boolean;
   transactionHash?: `0x${string}` | undefined;
 };
 
