@@ -6,9 +6,11 @@ import { SlowImageLoader } from "./image/SlowImageLoader";
 import { getFirstQueryParam } from "./util";
 import { ContractAddressSelector } from "./mint/ContractAddressSelector";
 import type { Contract } from "../db/db";
+import type { ChainData } from "../hooks/useContract";
 
 type Props = {
   nftMetadata: NFTMetadata;
+  chainData?: ChainData;
   tokenURI: IpfsTokenURI;
   ipfsHash: string;
   contractAddress: Address;
@@ -18,27 +20,17 @@ export const Mint = ({
   tokenURI,
   ipfsHash,
   contractAddress,
+  chainData,
 }: Props) => {
   const { isConnected } = useAccount();
   const network = useNetwork();
   const { switchNetwork, chains } = useSwitchNetwork();
   const [mounted, setMounted] = useState(false);
-  const netQueryParam = getFirstQueryParam("network");
-  const cloneParam = getFirstQueryParam("clone") === "true";
+
   const [selectedContract, setSelectedContract] = useState("");
   useEffect(() => {
     setMounted(true);
   }, []);
-  const net = network.chain?.network;
-
-  // useEffect(() => {
-  //   if (net !== netQueryParam && switchNetwork) {
-  //     const chain = chains.find((chain) => chain.network === netQueryParam);
-  //     if (chain) {
-  //       switchNetwork(chain.id);
-  //     }
-  //   }
-  // }, [net, netQueryParam, switchNetwork, chains]);
 
   const attributes = nftMetadata.attributes.reduce((acc, cur) => {
     return {
@@ -152,8 +144,8 @@ export const Mint = ({
           <MintButton
             disabled={!mounted || !isConnected}
             contractAddress={selectedContract as Address}
+            chainData={chainData}
             tokenURI={tokenURI}
-            clone={cloneParam}
             url={value.url}
           />
         </div>

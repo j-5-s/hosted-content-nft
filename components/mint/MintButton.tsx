@@ -3,17 +3,23 @@ import {
   useContractWrite,
   useWaitForTransaction,
   useNetwork,
+  useContractRead,
+  useAccount,
 } from "wagmi";
+import { formatEther } from "viem";
+import { useRouter } from "next/router";
 import cloneableContract from "./CloneableContract.json";
 import type { Address } from "../../types";
 import { getUrl } from "../util";
+import { useEffect, useState } from "react";
+import { ChainData } from "../../hooks/useContract";
 
 type MintButtonProps = {
   contractAddress: Address;
   tokenURI: string;
   disabled: boolean;
   url: string;
-  clone?: boolean;
+  chainData?: ChainData;
 };
 
 type PrepareCause = {
@@ -21,10 +27,11 @@ type PrepareCause = {
   reason: string;
   shortMessage: string;
 };
+const ONLY_OWNER_MESSAGE = "Only the contract owner may call the mint function";
 const getErrorMessage = (error?: PrepareCause) => {
   if (error?.name === "ContractFunctionRevertedError") {
     if (error.reason === "Ownable: caller is not the owner") {
-      return "Only the contract owner may call the mint function";
+      return ONLY_OWNER_MESSAGE;
     }
     return error.reason;
   }
@@ -32,45 +39,109 @@ const getErrorMessage = (error?: PrepareCause) => {
   return null;
 };
 export const MintButton = (props: MintButtonProps) => {
-  const { disabled, contractAddress, tokenURI, url, clone } = props;
+  const { disabled, contractAddress, tokenURI, url, chainData } = props;
+  const router = useRouter();
   const network = useNetwork();
+  const account = useAccount();
 
+  const [tokenId, setTokenId] = useState<number | undefined>();
+  const clone = chainData?.owner === account.address;
+  const defaultClonePrice = chainData?.defaultClonePrice || 0;
+  const [manualClonePrice, setManualClonePrice] = useState<
+    number | undefined
+  >();
+  const clonePrice =
+    typeof manualClonePrice !== "undefined"
+      ? manualClonePrice
+      : defaultClonePrice;
+  const opts = {
+    address: contractAddress,
+    abi: cloneableContract.abi,
+    functionName: clone ? "mintClone" : "mintNFT",
+    args: clone ? [tokenId, tokenURI] : [tokenURI, url],
+    enabled: clone ? !!tokenId : true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: undefined as any,
+  };
+
+  if (clone) {
+    opts.value = BigInt(clonePrice);
+  }
   const {
     config,
     error: prepareError,
     isError: isPrepareError,
-  } = usePrepareContractWrite({
-    address: contractAddress,
-    abi: cloneableContract.abi,
-    functionName: clone ? "mintClone" : "mintNFT",
-    args: clone ? [1] : [tokenURI, url],
-  });
+  } = usePrepareContractWrite(opts);
 
   const { data, error, isError, write } = useContractWrite(config);
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
-  // console.log(prepareError, "prepareError", error);
+
   const mintNFT = () => {
     write?.();
   };
+
+  const tokenResponse = useContractRead({
+    abi: cloneableContract.abi,
+    address: contractAddress,
+    functionName: "getTokenIdByUrl",
+    args: [url],
+    enabled: !!(url && clone),
+  });
+
+  useEffect(() => {
+    if (tokenResponse.data) {
+      setTokenId(Number(tokenResponse.data));
+    } else {
+      setTokenId(undefined);
+    }
+  }, [tokenResponse.data]);
+
+  const tokenPrice = useContractRead({
+    abi: cloneableContract.abi,
+    address: contractAddress,
+    functionName: "getClonePrice",
+    args: [`${tokenId}`],
+    enabled: !!(tokenId && clone),
+  });
+
+  const hasClonePrice = useContractRead({
+    abi: cloneableContract.abi,
+    address: contractAddress,
+    functionName: "getHasClonePrice",
+    args: [`${tokenId}`],
+    enabled: !!(tokenId && clone),
+  });
+
+  useEffect(() => {
+    if (hasClonePrice.data) {
+      setManualClonePrice(Number(tokenPrice.data));
+    }
+  }, [tokenPrice.data, hasClonePrice.data]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push(`/address/${contractAddress}`);
+    }
+  }, [isSuccess]);
 
   const prepareErrorMessage = getErrorMessage(
     prepareError?.cause as PrepareCause
   );
 
-  const txLink = getUrl({
-    tx: data?.hash as string,
-    network: network.chain?.network,
-  });
+  let altError = "";
+  if (clone && !tokenId) {
+    altError = "Token does not exist to clone";
+  }
 
   return (
     <div className="w-full flex flex-col">
-      {(isError || prepareErrorMessage) && (
+      {(isError || prepareErrorMessage || altError) && (
         <div className="bg-gray-100 rounded flex p-4 h-full items-center mb-2 border border-red-200 overflow-scroll text-xs">
           <span className="title-font font-medium">
-            {error?.message || prepareErrorMessage}
+            {error?.message || prepareErrorMessage || altError}
           </span>
         </div>
       )}
@@ -78,6 +149,7 @@ export const MintButton = (props: MintButtonProps) => {
         disabled={
           disabled ||
           isLoading ||
+          !!altError ||
           !contractAddress ||
           isPrepareError ||
           !!data?.hash
@@ -86,35 +158,12 @@ export const MintButton = (props: MintButtonProps) => {
         className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
       >
         {isLoading ? "Minting..." : "Mint"}
-        {clone ? " Clone" : ""}
+        {clone
+          ? ` Clone for ${formatEther(opts.value)} ${
+              network.chain?.nativeCurrency.symbol
+            }`
+          : ""}
       </button>
-      {isSuccess && (
-        <div className="bg-gray-100 rounded flex p-4 h-full items-center mt-2">
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="3"
-            className="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4"
-            viewBox="0 0 24 24"
-          >
-            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-            <path d="M22 4L12 14.01l-3-3"></path>
-          </svg>
-          <span className="title-font font-medium">
-            Successfully minted your NFT!{" "}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={txLink}
-              className="text-blue-500 underline text-xs"
-            >
-              {data?.hash}
-            </a>
-          </span>
-        </div>
-      )}
     </div>
   );
 };

@@ -72,7 +72,7 @@ const MintPage: NextPage<PageProps> = () => {
     setMounted(true);
   }, []);
 
-  useContract({
+  const { data } = useContract({
     address: contractAddress as `0x${string}`,
     imports: true,
   });
@@ -88,6 +88,7 @@ const MintPage: NextPage<PageProps> = () => {
         {!showLoader && (
           <Mint
             nftMetadata={nftMetadata}
+            chainData={data}
             tokenURI={tokenURI}
             ipfsHash={ipfsHash}
             contractAddress={contractAddress as Address}

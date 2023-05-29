@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useContractReads, useAccount, useNetwork } from "wagmi";
+import { useContractReads, useAccount, useNetwork, useBalance } from "wagmi";
 import { db } from "../db/db";
 import contract from "../components/mint/CloneableContract.json";
 
@@ -8,12 +8,40 @@ type Props = {
   imports?: boolean;
   transactionHash?: `0x${string}` | undefined;
 };
+type Balance = {
+  decimals: number;
+  formatted: string;
+  symbol: string;
+  value: bigint;
+};
+export type ChainData = {
+  name: string;
+  symbol: string;
+  owner: string;
+  balance?: Balance;
+  totalTokens: string;
+  creator: string;
+  description: string;
+  createdAt: number;
+  defaultClonePrice: number;
+};
 
-export const useContract = (props: Props) => {
+type ReturnData = {
+  data?: ChainData;
+  loading: boolean;
+  error?: string;
+};
+
+export const useContract = (props: Props): ReturnData => {
   const { address, transactionHash, imports = false } = props;
 
   const { isConnected, address: userAddress } = useAccount();
   const network = useNetwork();
+
+  const { data: balance } = useBalance({
+    address,
+    enabled: !!address,
+  });
 
   const contractInput = {
     address: address,
@@ -38,10 +66,6 @@ export const useContract = (props: Props) => {
       },
       {
         ...contractInput,
-        functionName: "balanceOf",
-      },
-      {
-        ...contractInput,
         functionName: "getTotalMintedTokens",
       },
       {
@@ -56,6 +80,10 @@ export const useContract = (props: Props) => {
         ...contractInput,
         functionName: "creationTime",
       },
+      {
+        ...contractInput,
+        functionName: "getDefaultClonePrice",
+      },
     ],
   });
 
@@ -63,28 +91,36 @@ export const useContract = (props: Props) => {
     name: "",
     symbol: "",
     owner: "",
-    balanceOf: 0,
     totalTokens: "",
     creator: "",
     description: "",
     createdAt: 0,
-  };
+    defaultClonePrice: 0,
+  } as ChainData;
+
+  if (balance) {
+    ret.balance = balance;
+  }
   if (data) {
     ret.name = data[0].result as unknown as string;
     ret.symbol = data[1].result as unknown as string;
     ret.owner = data[2].result as unknown as string;
-    const balance = data[3].result as unknown as number;
-    if (balance) {
-      ret.balanceOf = balance;
-    }
-    const totalTokens = data[4].result as unknown as bigint;
+    // const balance = data[3].result as unknown as number;
+    // if (balance) {
+    //   ret.balanceOf = balance;
+    // }
+    const totalTokens = data[3].result as unknown as bigint;
     ret.totalTokens = totalTokens?.toString();
 
-    ret.creator = data[5].result as unknown as string;
-    ret.description = data[6].result as unknown as string;
-    const createdAt = data[7].result as unknown as bigint;
+    ret.creator = data[4].result as unknown as string;
+    ret.description = data[5].result as unknown as string;
+    const createdAt = data[6].result as unknown as bigint;
     if (createdAt) {
       ret.createdAt = Number(createdAt) * 1000;
+    }
+    const defaultClonePrice = data[7].result as unknown as bigint;
+    if (typeof defaultClonePrice !== "undefined") {
+      ret.defaultClonePrice = Number(defaultClonePrice);
     }
   }
 

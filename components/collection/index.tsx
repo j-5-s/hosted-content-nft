@@ -33,7 +33,6 @@ export const Collection = (props: CollectionProps) => {
       : !!address,
   });
 
-  console.log(data);
   const filterAllItems = (value: boolean) => {
     setMyItemsFilter(value);
   };
@@ -41,7 +40,7 @@ export const Collection = (props: CollectionProps) => {
   const {
     data: contractData,
     error,
-    isLoading,
+    loading,
   } = useContract({
     address: address as `0x${string}`,
   });
@@ -55,13 +54,17 @@ export const Collection = (props: CollectionProps) => {
     address: address,
     network: network?.chain?.network,
   });
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(address as string);
+  };
   //0xa578f91257d06f83d373f717dfb7ddfb335317d6
 
   if (error) {
     return <FullPageMessaging error={error} />;
   }
 
-  if (isLoading) {
+  if (loading) {
     return <FullPageMessaging loading />;
   }
 
@@ -77,7 +80,10 @@ export const Collection = (props: CollectionProps) => {
           <span className="text-gray-500  text-xs mr-2">{address}</span>
         </div>
 
-        <button className="bg-white border rounded-full p-2 hover:bg-gray-100">
+        <button
+          onClick={handleCopy}
+          className="bg-white border rounded-full p-2 hover:bg-gray-100"
+        >
           <Copy />
         </button>
       </div>
@@ -127,7 +133,10 @@ export const Collection = (props: CollectionProps) => {
             </div>
             <div className="flex p-2 border-b border-gray-100 mb-2">
               <div className="w-1/4 tracking-widest title-font">Balance</div>
-              <div className="w-3/4">{contractData?.balanceOf}</div>
+              <div className="w-3/4">
+                {contractData?.balance?.formatted}{" "}
+                {contractData?.balance?.symbol}
+              </div>
             </div>
             <div className="flex p-2 border-b border-gray-100 mb-2">
               <div className="w-1/4 tracking-widest title-font">Tokens</div>
