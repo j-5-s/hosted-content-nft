@@ -67,10 +67,10 @@ export const SlowImageLoader = ({
               </p>
               <span className="inline-block h-1 w-10 rounded bg-indigo-500 mt-8 mb-6"></span>
               <p className="text-gray-500">
-                It may take up to a minute to retrieve image immediately after
-                pinning to IPFS. This is because IPFS is a decentralized
-                platform that ensures immutability and security by storing data
-                across many locations.
+                It may take a minute to retrieve image immediately after pinning
+                to IPFS. This is because IPFS is a decentralized platform that
+                ensures immutability and security by storing data across many
+                locations.
               </p>
             </div>
           </div>

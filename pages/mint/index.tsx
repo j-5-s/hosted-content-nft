@@ -5,6 +5,7 @@ import { Mint } from "../../components/Mint";
 import { Header } from "../../components/header";
 import { NFTMetadata, Address, IpfsTokenURI } from "../../types";
 import { fetchData } from "../../components/util";
+import { useContract } from "../../hooks/useContract";
 import { MintLoading } from "../../components/mint/MintLoading";
 type PageProps = {
   // Define the shape of the props returned by getServerSideProps
@@ -70,6 +71,11 @@ const MintPage: NextPage<PageProps> = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useContract({
+    address: contractAddress as `0x${string}`,
+    imports: true,
+  });
 
   const showLoader = !nftMetadata || !mounted;
   return (

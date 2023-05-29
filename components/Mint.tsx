@@ -3,7 +3,7 @@ import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 import { SlowImageLoader } from "./image/SlowImageLoader";
-import { getFirstQueryParam, getUrl } from "./util";
+import { getFirstQueryParam } from "./util";
 import { ContractAddressSelector } from "./mint/ContractAddressSelector";
 import type { Contract } from "../db/db";
 
@@ -30,6 +30,7 @@ export const Mint = ({
     setMounted(true);
   }, []);
   const net = network.chain?.network;
+
   // useEffect(() => {
   //   if (net !== netQueryParam && switchNetwork) {
   //     const chain = chains.find((chain) => chain.network === netQueryParam);
