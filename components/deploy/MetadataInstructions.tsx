@@ -93,7 +93,8 @@ export const MetadataInstructions = (props: Props) => {
               </div>
               <p className="text-center italic text-sm">
                 Adding the meta tag to your website will allow the chrome
-                extension to pre-populate the contract for your users.
+                extension to pre-populate the contract for your users to mint
+                NFT&apos;s.
               </p>
             </div>
           </div>

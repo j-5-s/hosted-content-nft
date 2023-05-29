@@ -84,7 +84,7 @@ export const useContract = (props: Props) => {
     ret.description = data[6].result as unknown as string;
     const createdAt = data[7].result as unknown as bigint;
     if (createdAt) {
-      ret.createdAt = Number() * 1000;
+      ret.createdAt = Number(createdAt) * 1000;
     }
   }
 

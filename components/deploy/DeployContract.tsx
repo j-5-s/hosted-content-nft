@@ -74,7 +74,10 @@ export const DeployContract = () => {
     <div className="py-6 container mx-auto">
       {network.chain?.unsupported && <Networks />}
       {!network.chain?.unsupported && (
-        <form className="flex flex-col w-full " onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col w-full bg-white p-4 border rounded shadow"
+          onSubmit={handleSubmit}
+        >
           <div className="relative mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">
               Name
