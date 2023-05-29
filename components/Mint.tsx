@@ -104,7 +104,7 @@ export const Mint = ({
               {netQueryParam}
             </span>
           </div>
-          <div className="flex border-t border-b border-gray-200 py-2">
+          <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Metadata (IPFS)</span>
             <span className="ml-auto text-gray-900">
               <a
@@ -114,6 +114,19 @@ export const Mint = ({
                 href={`https://ipfs.io/ipfs/${ipfsHash}`}
               >
                 ipfs://{ipfsHash}
+              </a>
+            </span>
+          </div>
+          <div className="flex border-t border-b border-gray-200 py-2">
+            <span className="text-gray-500">Image (IPFS)</span>
+            <span className="ml-auto text-gray-900">
+              <a
+                target="_blank"
+                rel="noreferrer nofollow"
+                className="text-blue-500 hover:underline text-xs"
+                href={value.image}
+              >
+                {nftMetadata?.image}
               </a>
             </span>
           </div>
