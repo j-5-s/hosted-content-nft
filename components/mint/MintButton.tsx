@@ -45,7 +45,7 @@ export const MintButton = (props: MintButtonProps) => {
   const account = useAccount();
 
   const [tokenId, setTokenId] = useState<number | undefined>();
-  const clone = chainData?.owner === account.address;
+  const clone = chainData?.owner !== account.address;
   const defaultClonePrice = chainData?.defaultClonePrice || 0;
   const [manualClonePrice, setManualClonePrice] = useState<
     number | undefined
@@ -130,7 +130,6 @@ export const MintButton = (props: MintButtonProps) => {
   const prepareErrorMessage = getErrorMessage(
     prepareError?.cause as PrepareCause
   );
-  console.log(clone, tokenId);
   let altError = "";
   if (clone && !tokenId) {
     altError = "Token does not exist to clone";
