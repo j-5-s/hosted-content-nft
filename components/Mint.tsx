@@ -7,6 +7,7 @@ import { getFirstQueryParam } from "./util";
 import { ContractAddressSelector } from "./mint/ContractAddressSelector";
 import type { Contract } from "../db/db";
 import type { ChainData } from "../hooks/useContract";
+import { useRouter } from "next/router";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -24,10 +25,26 @@ export const Mint = ({
 }: Props) => {
   const { isConnected } = useAccount();
   const network = useNetwork();
+  const router = useRouter();
   const { switchNetwork, chains } = useSwitchNetwork();
   const [mounted, setMounted] = useState(false);
-
   const [selectedContract, setSelectedContract] = useState("");
+
+  const updateContractQueryParam = (
+    contractAddress: string,
+    network?: string
+  ) => {
+    const query = {
+      ...router.query,
+      contractAddress,
+      network: network || router.query.network,
+    };
+    router.push({
+      pathname: router.pathname,
+      query,
+    });
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -57,8 +74,10 @@ export const Mint = ({
 
   const handleContractChange = (contract: Contract | undefined) => {
     setSelectedContract(contract?.address || "");
+
     if (contract?.network) {
       const chain = chains.find((chain) => chain.network === contract.network);
+      updateContractQueryParam(contract?.address, chain?.network);
       if (chain && switchNetwork) {
         switchNetwork(chain.id);
       }
