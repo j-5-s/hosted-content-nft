@@ -21,12 +21,16 @@ export const Collection = (props: CollectionProps) => {
   const { address } = props;
   const { data: walletClient } = useWalletClient();
   const network = useNetwork();
-  const [myItemsFilter, setMyItemsFilter] = useState(false);
+  const [myItemsFilter, setMyItemsFilter] = useState(true);
+  // 0 == all, 1 == clone, 2 == original
+  const [cloneFilter, setCloneFilter] = useState(0);
 
   const { data }: ContractData = useContractRead({
     address: address as `0x${string}`,
     abi: contract.abi,
-    args: myItemsFilter ? [walletClient?.account.address] : [],
+    args: myItemsFilter
+      ? [walletClient?.account.address, cloneFilter]
+      : [cloneFilter],
     functionName: myItemsFilter ? "getOwnedTokens" : "getAllMintedTokens",
     enabled: myItemsFilter
       ? !!(address && walletClient?.account.address)
@@ -58,7 +62,6 @@ export const Collection = (props: CollectionProps) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(address as string);
   };
-  //0xa578f91257d06f83d373f717dfb7ddfb335317d6
 
   if (error) {
     return <FullPageMessaging error={error} />;
@@ -157,16 +160,31 @@ export const Collection = (props: CollectionProps) => {
           <TabHeader
             actions={() => {
               return (
-                <div className="flex items-center">
-                  <input
-                    onChange={(evt) => filterAllItems(evt.target.checked)}
-                    type="checkbox"
-                    id="all-contracts"
-                    className="mr-1"
-                  />
-                  <label htmlFor="all-contracts" className="text-xs">
-                    My Tokens
-                  </label>
+                <div className="flex">
+                  <div className="flex items-center mr-2 text-xs">
+                    <select
+                      value={cloneFilter}
+                      onChange={(evt) =>
+                        setCloneFilter(parseInt(evt.target.value, 10))
+                      }
+                    >
+                      <option value={0}>All Types</option>
+                      <option value={2}>Originals</option>
+                      <option value={1}>Clones</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      onChange={(evt) => filterAllItems(evt.target.checked)}
+                      checked={myItemsFilter}
+                      type="checkbox"
+                      id="all-contracts"
+                      className="mr-1"
+                    />
+                    <label htmlFor="all-contracts" className="text-xs">
+                      My Tokens
+                    </label>
+                  </div>
                 </div>
               );
             }}
