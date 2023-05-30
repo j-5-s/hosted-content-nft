@@ -24,9 +24,8 @@ export class J5SClassedDexie extends Dexie {
 
   constructor() {
     super("j5s");
-    this.version(1).stores({
-      contracts:
-        "++id, user, address, txHash, name, symbol, creator, owner, network, description, createdAt, &[address+user]", // Primary key and indexed props
+    this.version(2).stores({
+      contracts: "++id, user, createdAt, &[address+user]", // Primary key and indexed props
     });
   }
 }

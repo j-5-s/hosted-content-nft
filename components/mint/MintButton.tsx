@@ -131,8 +131,10 @@ export const MintButton = (props: MintButtonProps) => {
     prepareError?.cause as PrepareCause
   );
   let altError = "";
-  if (clone && !tokenId) {
+  if (contractAddress && clone && !tokenId) {
     altError = "Token does not exist to clone";
+  } else if (!contractAddress) {
+    altError = "Please select a contract address";
   }
 
   return (

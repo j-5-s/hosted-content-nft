@@ -8,6 +8,7 @@ import { ContractAddressSelector } from "./mint/ContractAddressSelector";
 import type { Contract } from "../db/db";
 import type { ChainData } from "../hooks/useContract";
 import { useRouter } from "next/router";
+import { Trait } from "./mint/Trait";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -56,6 +57,8 @@ export const Mint = ({
     };
   }, {}) as NFTAttributes;
 
+  console.log(nftMetadata.attributes);
+
   const [, imageIPFSHash] = nftMetadata.image.split("ipfs://");
   const image = `https://ipfs.io/ipfs/${imageIPFSHash}`;
   const value = {
@@ -89,28 +92,9 @@ export const Mint = ({
     <div className="container mx-auto flex py-6 md:flex-row flex-col">
       <div className="lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
         <div className="w-full">
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Title</span>
-            <span className="ml-auto text-gray-900 text-xs">{value.title}</span>
-          </div>
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">URL</span>
-            <span className="ml-auto text-gray-900 text-xs">{value.url}</span>
-          </div>
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Date</span>
-            <span className="ml-auto text-gray-900 text-xs">{dateTime}</span>
-          </div>
-          <div className="flex border-t border-gray-200 py-2 flex-col">
-            <span className="text-gray-500">Text Content</span>
-            <textarea
-              rows={10}
-              disabled
-              className="ml-auto text-gray-400 text-xs w-full border border-gray-200 bg-gray-100 p-2 rounded"
-              value={value.text}
-            />
-          </div>
-
+          {nftMetadata.attributes.map((attr, index) => (
+            <Trait key={index} trait={attr} />
+          ))}
           <div className="flex border-t border-gray-200 py-2">
             <span className="text-gray-500">Metadata (IPFS)</span>
             <span className="ml-auto text-gray-900">
