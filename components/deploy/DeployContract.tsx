@@ -3,11 +3,13 @@ import { useRouter } from "next/router";
 import { useWalletClient, useWaitForTransaction, useNetwork } from "wagmi";
 import CloneableContract from "../mint/CloneableContract.json";
 import { Networks } from "./Networks";
+import { InputPrice } from "../form/InputPrice";
 
 type ContractArguments = {
   name: string;
   token: string;
   description: string;
+  defaultClonePrice: string;
 };
 
 export const DeployContract = () => {
@@ -15,20 +17,32 @@ export const DeployContract = () => {
   const network = useNetwork();
   const [hash, setHash] = useState<`0x${string}` | undefined>();
   const [error, setError] = useState<string | null>();
+  const [mounted, setMounted] = useState(false);
   const [isDeployingContract, setIsDeployingContract] = useState(false);
   const [contract, setContract] = useState<ContractArguments>({
     name: "",
     token: "",
+    defaultClonePrice: "0.01",
     description: "",
   });
 
-  const handleInputField = (key: "name" | "token" | "description") => {
+  console.log(contract);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const handleInputField = (
+    key: "name" | "token" | "description" | "defaultClonePrice"
+  ) => {
     return (
-      evt: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+      evt:
+        | ChangeEvent<HTMLInputElement>
+        | ChangeEvent<HTMLTextAreaElement>
+        | string
     ) => {
+      console.log(evt);
       setContract((prev) => ({
         ...prev,
-        [key]: evt?.target.value,
+        [key]: typeof evt === "string" ? evt : evt?.target.value,
       }));
     };
   };
@@ -55,7 +69,12 @@ export const DeployContract = () => {
         const hash = await walletClient?.deployContract({
           abi: CloneableContract.abi,
           account: walletClient.account,
-          args: [contract.name, contract.token, contract.description],
+          args: [
+            contract.name,
+            contract.token,
+            contract.description,
+            BigInt(contract.defaultClonePrice),
+          ],
           bytecode: CloneableContract.bytecode as `0x${string}`,
         });
 
@@ -111,6 +130,26 @@ export const DeployContract = () => {
               name="full-name"
               className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
+          </div>
+          <div className="relative mb-4">
+            <label
+              htmlFor="full-name"
+              className="leading-7 text-sm text-gray-600"
+            >
+              Default Clone Price
+            </label>
+            <InputPrice
+              required
+              onChange={handleInputField("defaultClonePrice")}
+              initialValue={contract.defaultClonePrice}
+              id="full-name"
+              name="full-name"
+            />
+
+            <p className="text-gray-500 text-xs mt-1 italic">
+              Anyone can clone one of your NFT&apos;s. Set the fee in (
+              {mounted && network.chain?.nativeCurrency?.symbol})
+            </p>
           </div>
           <div className="relative mb-4">
             <label

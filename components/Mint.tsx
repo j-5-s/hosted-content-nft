@@ -3,7 +3,6 @@ import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 import { SlowImageLoader } from "./image/SlowImageLoader";
-import { getFirstQueryParam } from "./util";
 import { ContractAddressSelector } from "./mint/ContractAddressSelector";
 import type { Contract } from "../db/db";
 import type { ChainData } from "../hooks/useContract";
@@ -86,7 +85,6 @@ export const Mint = ({
       }
     }
   };
-  const dateTime = mounted ? new Date(value.timestamp).toLocaleString() : "";
 
   return (
     <div className="container mx-auto flex py-6 md:flex-row flex-col">

@@ -1,7 +1,6 @@
-import { ChangeEvent, useEffect } from "react";
+import { useEffect } from "react";
 import type { NextPage } from "next";
 import { useSwitchNetwork } from "wagmi";
-import { useRouter } from "next/router";
 import { Header } from "../../components/header";
 import { Collection } from "../../components/collection";
 import { getFirstQueryParam } from "../../components/util";
@@ -26,7 +25,7 @@ const Search: NextPage = () => {
         <SearchField network={networkParam} />
       </Header>
       <div className="bg-gray-100 flex-1">
-        {search && <Collection address={search} />}
+        {search && <Collection address={search as `0x${string}`} />}
       </div>
     </section>
   );

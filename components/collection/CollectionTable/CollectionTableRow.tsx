@@ -9,7 +9,7 @@ type CollectionTableRowProps = {
 
 export const CollectionTableRow = (props: CollectionTableRowProps) => {
   const { tokenId, contractAddress, network } = props;
-  const { data, tokenURI, chainData, loading, error } = useFetchNFT({
+  const { data, tokenURI, chainData } = useFetchNFT({
     tokenId,
     contractAddress,
   });

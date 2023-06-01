@@ -10,7 +10,6 @@ import { formatEther } from "viem";
 import { useRouter } from "next/router";
 import cloneableContract from "./CloneableContract.json";
 import type { Address } from "../../types";
-import { getUrl } from "../util";
 import { useEffect, useState } from "react";
 import { ChainData } from "../../hooks/useContract";
 

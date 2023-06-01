@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useContractRead, useWalletClient, useNetwork } from "wagmi";
 import contract from "../mint/CloneableContract.json";
 import { NFTCard } from "./NFTCard";
@@ -9,8 +9,10 @@ import { CollectionTable } from "./CollectionTable";
 import { CollectionTableRow } from "./CollectionTable/CollectionTableRow";
 import { Tabs, Tab, TabHeader, TabBody, TabContent } from "../tabs";
 import { FullPageMessaging } from "../FullPageMessaging";
+
+import { EditContract } from "./EditContract";
 type CollectionProps = {
-  address?: string;
+  address: `0x${string}`;
 };
 type ContractData = {
   data: bigint[] | undefined;
@@ -21,6 +23,7 @@ export const Collection = (props: CollectionProps) => {
   const { address } = props;
   const { data: walletClient } = useWalletClient();
   const network = useNetwork();
+
   const [myItemsFilter, setMyItemsFilter] = useState(true);
   // 0 == all, 1 == clone, 2 == original
   const [cloneFilter, setCloneFilter] = useState(0);
@@ -90,20 +93,13 @@ export const Collection = (props: CollectionProps) => {
           <Copy />
         </button>
       </div>
-      <div className="flex -m-4">
+      <div className="flex -m-4  text-xs">
+        <EditContract chainData={contractData} address={address} />
         <div className="flex-1 bg-white rounded border border-gray-200 m-4 shadow">
-          <div className="border-b border-gray-200 px-2 py-3 font-bold text-sm">
-            {contractData?.name} ({contractData?.symbol})
-          </div>
-          <div className="p-2 text-sm flex">
-            <p>{contractData?.description}</p>
-          </div>
-        </div>
-        <div className="flex-1 bg-white rounded border border-gray-200 m-4 shadow">
-          <div className="border-b border-gray-200 px-2 py-3 font-bold text-sm">
+          <div className="border-b border-gray-200 px-2 py-3 font-bold">
             More Info
           </div>
-          <div className="py-4 px-2 text-sm">
+          <div className="py-4 px-2">
             <div className="flex p-2 border-b border-gray-100 mb-2">
               <div className="w-1/4 tracking-widest title-font">
                 Contract Creator

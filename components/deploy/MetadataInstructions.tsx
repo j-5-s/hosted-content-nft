@@ -10,7 +10,7 @@ type Props = {
 export const MetadataInstructions = (props: Props) => {
   const network = useNetwork();
   const [networkState, setNetworkState] = useState<string>();
-  const { transactionHash, contractAddress } = props;
+  const { contractAddress } = props;
   const metaTagHtml = `<meta name="nft_contract_address" content="${contractAddress}" />
 <meta name="nft_contract_network" content="${network?.chain?.network}" />`;
   useEffect(() => {
