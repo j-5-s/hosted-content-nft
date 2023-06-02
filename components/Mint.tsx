@@ -91,6 +91,8 @@ export const Mint = ({
     }
   };
 
+  console.log(chainData);
+
   return (
     <MintForm
       tokenURI={tokenURI}
@@ -178,6 +180,8 @@ export const Mint = ({
             </div>
           )}
           <MintButton
+            defaultClonePrice={chainData?.defaultClonePrice}
+            hasClonePrice={!!contractMeta?.data?.hasItemizedClonePrice}
             disabled={!!error || loading}
             isOwner={contractMeta?.data?.isOwner}
             value={contractMeta?.data?.clonePrice}

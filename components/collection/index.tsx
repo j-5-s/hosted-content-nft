@@ -52,6 +52,8 @@ export const Collection = (props: CollectionProps) => {
     address: address as `0x${string}`,
   });
 
+  console.log(contractData);
+
   const contractLink = getUrl({
     address: contractData?.creator,
     network: network?.chain?.network,

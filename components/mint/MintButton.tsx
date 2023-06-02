@@ -6,10 +6,23 @@ type MintButtonProps = {
   isOwner?: boolean;
   value?: bigint; // Should replace 'any' with the appropriate type
   symbol?: string; // Should replace 'any' with the appropriate type
+  defaultClonePrice?: bigint;
+  hasItemizedClonePrice?: boolean;
 };
 
 export const MintButton = (props: MintButtonProps) => {
-  const { disabled, isLoading, isOwner, value, symbol } = props;
+  const {
+    disabled,
+    isLoading,
+    isOwner,
+    value,
+    symbol,
+    defaultClonePrice,
+    hasItemizedClonePrice,
+  } = props;
+
+  const clonePrice = hasItemizedClonePrice ? value : defaultClonePrice;
+  console.log(defaultClonePrice);
   // @todo disabled state for undefined values
   return (
     <button
@@ -19,7 +32,7 @@ export const MintButton = (props: MintButtonProps) => {
     >
       {isLoading ? "Minting..." : "Mint"}
       {!isOwner && typeof value !== "undefined"
-        ? ` Clone for ${formatEther(value)} ${symbol}`
+        ? ` Clone for ${formatEther(clonePrice || BigInt(0))} ${symbol}`
         : ""}
     </button>
   );

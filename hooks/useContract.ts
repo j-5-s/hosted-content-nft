@@ -23,7 +23,7 @@ export type ChainData = {
   creator: string;
   description: string;
   createdAt: number;
-  defaultClonePrice: number;
+  defaultClonePrice: bigint;
 };
 
 type ReturnData = {
@@ -95,7 +95,7 @@ export const useContract = (props: Props): ReturnData => {
     creator: "",
     description: "",
     createdAt: 0,
-    defaultClonePrice: 0,
+    defaultClonePrice: BigInt(0),
   } as ChainData;
 
   if (balance) {
@@ -120,7 +120,7 @@ export const useContract = (props: Props): ReturnData => {
     }
     const defaultClonePrice = data[7].result as unknown as bigint;
     if (typeof defaultClonePrice !== "undefined") {
-      ret.defaultClonePrice = Number(defaultClonePrice);
+      ret.defaultClonePrice = BigInt(defaultClonePrice);
     }
   }
 

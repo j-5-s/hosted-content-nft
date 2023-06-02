@@ -20,7 +20,7 @@ export const ContractToken = (props: ContractTokenProps) => {
   const imgUrl = getImageURIFromIPFS(image);
   const tokenURI = getImageURIFromIPFS(tokenChainData?.uri);
   const account = useAccount();
-
+  // console.log(data, tokenChainData);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);

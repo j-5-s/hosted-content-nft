@@ -95,8 +95,12 @@ export const MintForm = (props: MintFormProps) => {
     value: undefined as any,
   };
 
-  if (!isOwner && typeof contractMetadata.data?.clonePrice !== "undefined") {
-    opts.value = contractMetadata.data?.clonePrice;
+  const clonePrice = contractMetadata?.data?.hasItemizedClonePrice
+    ? contractMetadata.data?.clonePrice
+    : chainData?.defaultClonePrice;
+
+  if (!isOwner && clonePrice) {
+    opts.value = clonePrice;
   }
   const { config, error: prepareError } = usePrepareContractWrite(opts);
 
