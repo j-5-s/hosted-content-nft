@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { useNetwork, useSwitchNetwork } from "wagmi";
 import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 import { SlowImageLoader } from "./image/SlowImageLoader";
@@ -181,7 +181,7 @@ export const Mint = ({
           )}
           <MintButton
             defaultClonePrice={chainData?.defaultClonePrice}
-            hasClonePrice={!!contractMeta?.data?.hasItemizedClonePrice}
+            hasItemizedClonePrice={!!contractMeta?.data?.hasItemizedClonePrice}
             disabled={!!error || loading}
             isOwner={contractMeta?.data?.isOwner}
             value={contractMeta?.data?.clonePrice}

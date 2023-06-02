@@ -14,7 +14,7 @@ export const EditContract = ({ chainData, address }: Props) => {
   const account = useAccount();
   const [fields, setFields] = useState({
     description: chainData?.description,
-    defaultClonePrice: chainData?.defaultClonePrice,
+    defaultClonePrice: chainData?.defaultClonePrice as bigint,
   });
   const isOwner = chainData?.owner && chainData?.owner === account.address;
   const { data, isLoading, write } = useContractWrite({
@@ -68,7 +68,7 @@ export const EditContract = ({ chainData, address }: Props) => {
             {editing && (
               <input
                 type="text"
-                value={fields.defaultClonePrice}
+                value={fields.defaultClonePrice.toString()}
                 onChange={handleChange("defaultClonePrice")}
                 className="bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 outline-none text-gray-700 px-2 w-full leading-6 transition-colors duration-200 ease-in-out"
               />
