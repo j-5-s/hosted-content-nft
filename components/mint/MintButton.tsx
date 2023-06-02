@@ -22,8 +22,7 @@ export const MintButton = (props: MintButtonProps) => {
   } = props;
 
   const clonePrice = hasItemizedClonePrice ? value : defaultClonePrice;
-  console.log(defaultClonePrice);
-  // @todo disabled state for undefined values
+
   return (
     <button
       disabled={disabled}
@@ -31,7 +30,7 @@ export const MintButton = (props: MintButtonProps) => {
       className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
     >
       {isLoading ? "Minting..." : "Mint"}
-      {!isOwner && typeof value !== "undefined"
+      {!isOwner
         ? ` Clone for ${formatEther(clonePrice || BigInt(0))} ${symbol}`
         : ""}
     </button>

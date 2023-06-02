@@ -1,6 +1,6 @@
 import { useFetchNFT } from "../../hooks/useFetchNFT";
 import { getImageURIFromIPFS, getAttributesAsKeys } from "../util";
-
+import { ImageComponent } from "../utility/Image";
 type Props = {
   tokenId: bigint;
   contractAddress: `0x${string}`;
@@ -17,15 +17,9 @@ export const NFTCard = ({ tokenId, contractAddress }: Props) => {
   const date = new Date(ts).toLocaleString();
 
   return (
-    <div className="md:w-1/3 m-4">
+    <div className="">
       <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
-        {imageURI && (
-          <img
-            className="lg:h-48 md:h-36 w-full object-cover object-center"
-            src={imageURI}
-            alt="screenshot"
-          />
-        )}
+        {imageURI && <ImageComponent src={imageURI} />}
         <div className="p-6">
           <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
             {ts && date}

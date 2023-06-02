@@ -52,8 +52,6 @@ export const Collection = (props: CollectionProps) => {
     address: address as `0x${string}`,
   });
 
-  console.log(contractData);
-
   const contractLink = getUrl({
     address: contractData?.creator,
     network: network?.chain?.network,
@@ -208,7 +206,7 @@ export const Collection = (props: CollectionProps) => {
               />
             </TabBody>
             <TabBody id="cards">
-              <div className="flex flex-wrap -mx-4 -mt-4">
+              <div className="grid grid-cols-3 gap-4">
                 {data?.map((tokenId) => (
                   <NFTCard
                     key={tokenId.toString()}

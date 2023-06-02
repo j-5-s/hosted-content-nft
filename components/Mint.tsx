@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNetwork, useSwitchNetwork } from "wagmi";
+import { useNetwork, useSwitchNetwork, useAccount } from "wagmi";
 import { MintButton } from "./mint/MintButton";
 import { NFTMetadata, NFTAttributes, Address, IpfsTokenURI } from "../types";
 import { SlowImageLoader } from "./image/SlowImageLoader";
@@ -29,6 +29,8 @@ export const Mint = ({
   const { switchNetwork, chains } = useSwitchNetwork();
   const [loading, setIsLoading] = useState(false);
   const [contractMeta, setContractMeta] = useState<ContractMeta | null>(null);
+  const account = useAccount();
+
   const updateContractQueryParam = (
     contractAddress: string,
     network?: string
@@ -90,8 +92,7 @@ export const Mint = ({
       router.push(`/address/${contractAddress}`);
     }
   };
-
-  console.log(chainData);
+  const isOwner = !!(chainData?.owner && chainData.owner === account.address);
 
   return (
     <MintForm
@@ -183,7 +184,7 @@ export const Mint = ({
             defaultClonePrice={chainData?.defaultClonePrice}
             hasItemizedClonePrice={!!contractMeta?.data?.hasItemizedClonePrice}
             disabled={!!error || loading}
-            isOwner={contractMeta?.data?.isOwner}
+            isOwner={isOwner}
             value={contractMeta?.data?.clonePrice}
             symbol={network?.chain?.nativeCurrency?.symbol}
           />
