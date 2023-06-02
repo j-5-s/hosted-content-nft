@@ -5,7 +5,7 @@ import contract from "../components/mint/CloneableContract.json";
 
 type Props = {
   address?: `0x${string}` | undefined;
-  imports?: boolean;
+  importsContractToDB?: boolean;
   transactionHash?: `0x${string}` | undefined;
 };
 type Balance = {
@@ -33,7 +33,7 @@ type ReturnData = {
 };
 
 export const useContract = (props: Props): ReturnData => {
-  const { address, transactionHash, imports = false } = props;
+  const { address, transactionHash, importsContractToDB = false } = props;
 
   const { isConnected, address: userAddress } = useAccount();
   const network = useNetwork();
@@ -138,7 +138,7 @@ export const useContract = (props: Props): ReturnData => {
         address &&
         userAddress &&
         network?.chain?.network &&
-        imports
+        importsContractToDB
       ) {
         try {
           const existingContract = await db.contracts.get({
@@ -171,7 +171,7 @@ export const useContract = (props: Props): ReturnData => {
     data,
     isConnected,
     userAddress,
-    imports,
+    importsContractToDB,
     address,
     transactionHash,
     network?.chain?.network,

@@ -2,6 +2,7 @@ import { ChangeEvent, useState, FormEvent, useEffect } from "react";
 import { useContractWrite, useWaitForTransaction } from "wagmi";
 import type { ChainData } from "../../hooks/useContract";
 import cloneableContract from "../mint/CloneableContract.json";
+import { formatEther } from "viem";
 
 type Props = {
   chainData?: ChainData;
@@ -60,11 +61,9 @@ export const EditContract = ({ chainData, address }: Props) => {
           <div></div>
         </div>
         <div className="flex p-2 border-b border-gray-100 mb-2 mx-2 items-center">
-          <div className="tracking-widest title-font">
-            Default Clone Price (in matic)
-          </div>
+          <div className="tracking-widest title-font">Default Clone Price</div>
           <div className="flex-1 ml-2">
-            {!editing && fields.defaultClonePrice}
+            {!editing && formatEther(BigInt(fields.defaultClonePrice || 0))}
             {editing && (
               <input
                 type="text"
@@ -101,9 +100,17 @@ export const EditContract = ({ chainData, address }: Props) => {
         {editing && (
           <button
             type="submit"
-            className="min-w-24 flex items-center text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
+            className="min-w-24 mr-2 flex items-center text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
           >
             Save {(isLoading || isLoadingTx) && "..."}
+          </button>
+        )}
+        {editing && (
+          <button
+            onClick={() => setEditing(false)}
+            className="min-w-24 flex items-center text-blue-500 border-blue-500  border py-2 px-6 focus:outline-none hover:bg-gray-100 rounded text-lg disabled:opacity-25"
+          >
+            Cancel
           </button>
         )}
       </div>

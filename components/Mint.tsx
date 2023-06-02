@@ -8,6 +8,7 @@ import type { Contract } from "../db/db";
 import type { ChainData } from "../hooks/useContract";
 import { useRouter } from "next/router";
 import { Trait } from "./mint/Trait";
+import { ContractMeta, MintForm, SubmitData } from "./mint/MintForm";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -29,7 +30,7 @@ export const Mint = ({
   const { switchNetwork, chains } = useSwitchNetwork();
   const [mounted, setMounted] = useState(false);
   const [selectedContract, setSelectedContract] = useState("");
-
+  const [contractMeta, setContractMeta] = useState<ContractMeta | null>(null);
   const updateContractQueryParam = (
     contractAddress: string,
     network?: string
@@ -56,8 +57,6 @@ export const Mint = ({
     };
   }, {}) as NFTAttributes;
 
-  console.log(nftMetadata.attributes);
-
   const [, imageIPFSHash] = nftMetadata.image.split("ipfs://");
   const image = `https://ipfs.io/ipfs/${imageIPFSHash}`;
   const value = {
@@ -68,11 +67,6 @@ export const Mint = ({
     text: attributes.Text,
     contractAddress,
   };
-
-  // const contractLink = getUrl({
-  //   address: value?.contractAddress,
-  //   network: network.chain?.network,
-  // });
 
   const handleContractChange = (contract: Contract | undefined) => {
     setSelectedContract(contract?.address || "");
@@ -86,8 +80,35 @@ export const Mint = ({
     }
   };
 
+  const [error, setError] = useState<Error | null>(null);
+  const handleError = (error: Error) => {
+    setError(error);
+  };
+  const handleLoad = (contractMeta: ContractMeta) => {
+    setContractMeta(contractMeta);
+  };
+
+  useEffect(() => {
+    setError(null);
+  }, [contractAddress]);
+
+  const handleSubmit = (data: SubmitData) => {
+    if (data.success) {
+      router.push(`/address/${contractAddress}`);
+    }
+  };
+
   return (
-    <div className="container mx-auto flex py-6 md:flex-row flex-col">
+    <MintForm
+      tokenURI={tokenURI}
+      url={value.url}
+      chainData={chainData}
+      contractAddress={contractAddress}
+      className="container mx-auto flex py-6 md:flex-row flex-col"
+      onError={handleError}
+      onLoad={handleLoad}
+      onSubmit={handleSubmit}
+    >
       <div className="lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
         <div className="w-full">
           {nftMetadata.attributes.map((attr, index) => (
@@ -143,12 +164,15 @@ export const Mint = ({
               />
             </div>
           </div>
+          {error && (
+            <div className="border overflow-scroll text-xs mb-4 p-4 border-red-200 bg-gray-100">
+              {error.message}
+            </div>
+          )}
           <MintButton
-            disabled={!mounted || !isConnected}
-            contractAddress={selectedContract as Address}
-            chainData={chainData}
-            tokenURI={tokenURI}
-            url={value.url}
+            isOwner={contractMeta?.data?.isOwner}
+            value={contractMeta?.data?.clonePrice}
+            symbol={network?.chain?.nativeCurrency?.symbol}
           />
         </div>
       </div>
@@ -159,6 +183,6 @@ export const Mint = ({
           className="object-cover object-center rounded border"
         />
       </div>
-    </div>
+    </MintForm>
   );
 };

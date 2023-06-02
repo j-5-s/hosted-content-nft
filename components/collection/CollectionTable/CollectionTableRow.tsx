@@ -1,15 +1,17 @@
 import { useFetchNFT } from "../../../hooks/useFetchNFT";
 import { getAttributesAsKeys, getUrl, trimHash } from "../../util";
+import type { ChainData } from "../../../hooks/useContract";
 
 type CollectionTableRowProps = {
   tokenId: bigint;
   contractAddress: `0x${string}`;
   network?: string;
+  chainData?: ChainData;
 };
 
 export const CollectionTableRow = (props: CollectionTableRowProps) => {
-  const { tokenId, contractAddress, network } = props;
-  const { data, tokenURI, chainData } = useFetchNFT({
+  const { tokenId, contractAddress, network, chainData } = props;
+  const { data, tokenURI, tokenChainData } = useFetchNFT({
     tokenId,
     contractAddress,
   });
@@ -71,11 +73,11 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
           rel="noreferrer"
           target="_blank"
         >
-          {trimHash(chainData.creator, 6, 4)}
+          {trimHash(tokenChainData?.creator, 6, 4)}
         </a>
       </td>
 
-      <td className="px-4 py-3">{chainData?.isClone.toString()}</td>
+      <td className="px-4 py-3">{tokenChainData?.isClone?.toString()}</td>
 
       <td className="px-4 py-3">
         <a

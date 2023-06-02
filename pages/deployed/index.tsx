@@ -16,7 +16,7 @@ const DeployedPage: NextPage = () => {
   useContract({
     address: contractAddress,
     transactionHash,
-    imports: true,
+    importsContractToDB: true,
   });
 
   return (

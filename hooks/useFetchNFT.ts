@@ -15,6 +15,15 @@ type FetchState = {
   loading: boolean;
   tokenURI: string | null;
 };
+
+export type TokenChainData = {
+  creator: string;
+  isClone: boolean;
+  ownerOf: string;
+  hasClonePrice: boolean;
+  clonePrice: bigint;
+};
+
 export const useFetchNFT = (props: Props) => {
   const { tokenId, contractAddress } = props;
 
@@ -53,17 +62,40 @@ export const useFetchNFT = (props: Props) => {
         functionName: "isClone",
         args: [tokenId],
       },
+      {
+        ...contractInput,
+        functionName: "ownerOf",
+        args: [tokenId],
+      },
+      {
+        ...contractInput,
+        functionName: "getClonePrice",
+        args: [tokenId],
+      },
+      {
+        ...contractInput,
+        functionName: "getHasClonePrice",
+        args: [tokenId],
+      },
     ],
   });
 
   const chainData = {
     creator: "",
     isClone: false,
+    ownerOf: "",
+    clonePrice: BigInt(0),
+    hasClonePrice: false,
   };
 
   if (readsResponse.data) {
     chainData.creator = readsResponse.data[0].result as unknown as string;
     chainData.isClone = readsResponse.data[1].result as unknown as boolean;
+    chainData.ownerOf = readsResponse.data[2].result as unknown as string;
+
+    chainData.clonePrice = readsResponse.data[3].result as unknown as bigint;
+    chainData.hasClonePrice = readsResponse.data[4]
+      .result as unknown as boolean;
   }
 
   useEffect(() => {
@@ -85,7 +117,7 @@ export const useFetchNFT = (props: Props) => {
   }, [data]);
   return {
     ...state,
-    chainData,
+    tokenChainData: chainData,
     loading: state.loading || isLoading,
   };
 };

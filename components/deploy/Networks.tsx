@@ -13,7 +13,6 @@ export const Networks = () => {
   // @todo
   // https://www.figma.com/file/40zZih6Yv9vgoZXT6FCZSP/Crypto-logos-(Community)?type=design&node-id=8-339&t=3RN9a1ekhNQ3UFMW-0
 
-  console.log(chains);
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">

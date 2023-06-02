@@ -26,7 +26,6 @@ export const DeployContract = () => {
     description: "",
   });
 
-  console.log(contract);
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -39,7 +38,6 @@ export const DeployContract = () => {
         | ChangeEvent<HTMLTextAreaElement>
         | string
     ) => {
-      console.log(evt);
       setContract((prev) => ({
         ...prev,
         [key]: typeof evt === "string" ? evt : evt?.target.value,

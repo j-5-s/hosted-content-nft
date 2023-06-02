@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useContractRead, useWalletClient, useNetwork } from "wagmi";
 import contract from "../mint/CloneableContract.json";
 import { NFTCard } from "./NFTCard";
@@ -197,6 +197,7 @@ export const Collection = (props: CollectionProps) => {
                     key={tokenId.toString()}
                     contractAddress={address as `0x${string}`}
                     tokenId={tokenId}
+                    chainData={contractData}
                     network={network?.chain?.network}
                   />
                 )}

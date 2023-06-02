@@ -82,9 +82,9 @@ export const fetchData = async (ipfsHash: string) => {
 };
 
 export const trimHash = (
-  hash: `0x${string}` | string | null,
-  prefix: number,
-  suffix: number
+  hash?: `0x${string}` | string | null,
+  prefix = 6,
+  suffix = 6
 ) => {
   if (!hash) return "";
   return (
