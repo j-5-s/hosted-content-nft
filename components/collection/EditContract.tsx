@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, FormEvent, useEffect } from "react";
-import { useContractWrite, useWaitForTransaction } from "wagmi";
+import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import type { ChainData } from "../../hooks/useContract";
 import cloneableContract from "../mint/CloneableContract.json";
 import { formatEther } from "viem";
@@ -11,11 +11,12 @@ type Props = {
 
 export const EditContract = ({ chainData, address }: Props) => {
   const [editing, setEditing] = useState(false);
+  const account = useAccount();
   const [fields, setFields] = useState({
     description: chainData?.description,
     defaultClonePrice: chainData?.defaultClonePrice,
   });
-
+  const isOwner = chainData?.owner && chainData?.owner === account.address;
   const { data, isLoading, write } = useContractWrite({
     address,
     abi: cloneableContract.abi,
@@ -88,32 +89,34 @@ export const EditContract = ({ chainData, address }: Props) => {
           </div>
         </div>
       </div>
-      <div className="flex border-t w-full px-4 py-2">
-        {!editing && (
-          <button
-            onClick={() => setEditing(true)}
-            className="w-24 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
-          >
-            Edit
-          </button>
-        )}
-        {editing && (
-          <button
-            type="submit"
-            className="min-w-24 mr-2 flex items-center text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
-          >
-            Save {(isLoading || isLoadingTx) && "..."}
-          </button>
-        )}
-        {editing && (
-          <button
-            onClick={() => setEditing(false)}
-            className="min-w-24 flex items-center text-blue-500 border-blue-500  border py-2 px-6 focus:outline-none hover:bg-gray-100 rounded text-lg disabled:opacity-25"
-          >
-            Cancel
-          </button>
-        )}
-      </div>
+      {isOwner && (
+        <div className="flex border-t w-full px-4 py-2">
+          {!editing && (
+            <button
+              onClick={() => setEditing(true)}
+              className="w-24 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
+            >
+              Edit
+            </button>
+          )}
+          {editing && (
+            <button
+              type="submit"
+              className="min-w-24 mr-2 flex items-center text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
+            >
+              Save {(isLoading || isLoadingTx) && "..."}
+            </button>
+          )}
+          {editing && (
+            <button
+              onClick={() => setEditing(false)}
+              className="min-w-24 flex items-center text-blue-500 border-blue-500  border py-2 px-6 focus:outline-none hover:bg-gray-100 rounded text-lg disabled:opacity-25"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      )}
     </form>
   );
 };

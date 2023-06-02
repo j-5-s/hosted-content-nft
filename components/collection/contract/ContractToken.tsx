@@ -4,6 +4,7 @@ import { getImageURIFromIPFS, trimHash } from "../../util";
 import type { TokenChainData } from "../../../hooks/useFetchNFT";
 import { EditContractToken } from "./EditContractToken";
 import { useAccount } from "wagmi";
+import { Address } from "../../utility/Address";
 type ContractTokenProps = {
   data?: NFTMetadata | null;
   address: `0x${string}`;
@@ -80,7 +81,7 @@ export const ContractToken = (props: ContractTokenProps) => {
               </div>
               <div className="flex flex-col items-center text-center justify-center">
                 <h2 className="font-medium title-font mt-4 text-gray-900 text-lg">
-                  {trimHash(creator, 6, 4)}
+                  <Address>{creator}</Address>
                 </h2>
                 <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
                 <p className="text-base">{name}</p>

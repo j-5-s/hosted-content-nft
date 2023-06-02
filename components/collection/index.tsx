@@ -9,7 +9,7 @@ import { CollectionTable } from "./CollectionTable";
 import { CollectionTableRow } from "./CollectionTable/CollectionTableRow";
 import { Tabs, Tab, TabHeader, TabBody, TabContent } from "../tabs";
 import { FullPageMessaging } from "../FullPageMessaging";
-
+import { Address } from "../utility/Address";
 import { EditContract } from "./EditContract";
 type CollectionProps = {
   address: `0x${string}`;
@@ -83,7 +83,9 @@ export const Collection = (props: CollectionProps) => {
       <div className="flex items-center mb-2">
         <div className="mr-1 h-full">
           Contract{" "}
-          <span className="text-gray-500  text-xs mr-2">{address}</span>
+          <span className="text-gray-500  text-xs mr-2">
+            <Address>{address}</Address>
+          </span>
         </div>
 
         <button
@@ -111,7 +113,7 @@ export const Collection = (props: CollectionProps) => {
                   rel="noreferrer"
                   className="text-blue-500 hover:underline text-xs"
                 >
-                  {contractData?.creator}
+                  <Address>{contractData?.creator}</Address>
                 </a>
               </div>
             </div>

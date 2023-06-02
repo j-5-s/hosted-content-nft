@@ -1,6 +1,7 @@
 import { useFetchNFT } from "../../../hooks/useFetchNFT";
 import { getAttributesAsKeys, getUrl, trimHash } from "../../util";
 import type { ChainData } from "../../../hooks/useContract";
+import { Address } from "../../utility/Address";
 
 type CollectionTableRowProps = {
   tokenId: bigint;
@@ -73,7 +74,9 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
           rel="noreferrer"
           target="_blank"
         >
-          {trimHash(tokenChainData?.creator, 6, 4)}
+          <Address trimPre={6} trimPost={4}>
+            {tokenChainData?.creator}
+          </Address>
         </a>
       </td>
 

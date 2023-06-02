@@ -13,6 +13,8 @@ import { InputPrice } from "../../form/InputPrice";
 import contract from "../../mint/CloneableContract.json";
 import { Burn } from "./Burn";
 import { NFTMetadata } from "../../../types";
+import { Address } from "../../utility/Address";
+import { getUrl } from "../../util";
 
 type EditContractProps = {
   tokenChainData?: TokenChainData | null;
@@ -76,13 +78,14 @@ export const EditContractToken = (props: EditContractProps) => {
       </h2>
       <div className="flex p-2 border-b border-gray-100 mb-2">
         <div className="w-1/4 tracking-widest title-font">Token Creator</div>
-        <div className="w-3/4">{tokenChainData?.creator}</div>
+        <div className="w-3/4">
+          <Address link>{tokenChainData?.creator}</Address>
+        </div>
       </div>
       <div className="flex p-2 border-b border-gray-100 mb-2">
         <div className="w-1/4 tracking-widest title-font">Token</div>
-        <div className="w-3/4">
-          {tokenChainData?.ownerOf}
-          {tokenChainData?.ownerOf === account.address && <div>You!</div>}
+        <div className="w-3/4 flex">
+          <Address link>{tokenChainData?.ownerOf}</Address>
         </div>
       </div>
       <div className="flex p-2 border-b border-gray-100 mb-2">
