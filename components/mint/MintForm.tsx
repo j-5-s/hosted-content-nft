@@ -226,7 +226,6 @@ export const MintForm = (props: MintFormProps) => {
   }, [contractMetadata]);
 
   useEffect(() => {
-
     if (onError && !contractMetadata.loading) {
       if (contractAddress && !isOwner && !tokenId) {
         onError(new Error("Token does not exist to clone. "));
