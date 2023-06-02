@@ -81,10 +81,10 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
 
       <td className="px-4 py-3">
         <a
-          href={`/nft/${contractAddress}/${tokenId.toString()}`}
+          href={`/address/${contractAddress}/${tokenId.toString()}`}
           className="text-blue-500 hover:underline"
         >
-          Manage
+          View
         </a>
       </td>
     </tr>
