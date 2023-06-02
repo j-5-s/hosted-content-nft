@@ -12,17 +12,19 @@ import { XCircle } from "../../icons/x-circle";
 import { InputPrice } from "../../form/InputPrice";
 import contract from "../../mint/CloneableContract.json";
 import { Burn } from "./Burn";
+import { NFTMetadata } from "../../../types";
 
 type EditContractProps = {
   tokenChainData?: TokenChainData | null;
   address: `0x${string}`;
   tokenId?: bigint;
+  metadata?: NFTMetadata | null;
 };
 
 export const EditContractToken = (props: EditContractProps) => {
   const [editMode, setEditMode] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { tokenChainData, address, tokenId } = props;
+  const { tokenChainData, address, tokenId, metadata } = props;
   const account = useAccount();
   const network = useNetwork();
   const [fields, setFields] = useState({
@@ -70,7 +72,7 @@ export const EditContractToken = (props: EditContractProps) => {
       className="flex flex-col border rounded bg-white p-4 text-xs"
     >
       <h2 className="text-2xl font-medium text-gray-900 title-font mb-2">
-        Owner Managment
+        Owner Management
       </h2>
       <div className="flex p-2 border-b border-gray-100 mb-2">
         <div className="w-1/4 tracking-widest title-font">Token Creator</div>
@@ -156,7 +158,7 @@ export const EditContractToken = (props: EditContractProps) => {
           )}
         </div>
 
-        <Burn tokenId={tokenId} address={address} />
+        <Burn tokenId={tokenId} address={address} metadata={metadata} />
       </div>
     </form>
   );

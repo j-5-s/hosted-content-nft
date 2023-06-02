@@ -1,7 +1,9 @@
-import type { NFTMetadata } from "../../../types";
+import { useState, useEffect } from "react";
+import type { NFTMetadata, NFTAttributes } from "../../../types";
 import { getImageURIFromIPFS, trimHash } from "../../util";
 import type { TokenChainData } from "../../../hooks/useFetchNFT";
 import { EditContractToken } from "./EditContractToken";
+import { useAccount } from "wagmi";
 type ContractTokenProps = {
   data?: NFTMetadata | null;
   address: `0x${string}`;
@@ -15,13 +17,35 @@ export const ContractToken = (props: ContractTokenProps) => {
   const { creator } = tokenChainData || {};
   const { name, image, description } = data || {};
   const imgUrl = getImageURIFromIPFS(image);
+  const tokenURI = getImageURIFromIPFS(tokenChainData?.uri);
+  const account = useAccount();
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isOwner = mounted && tokenChainData?.ownerOf === account?.address;
+  const attributes = data?.attributes.reduce((acc, attribute) => {
+    return {
+      ...acc,
+      [attribute.trait_type]: attribute.value,
+    };
+  }, {} as Record<string, string>) as NFTAttributes;
+  const ts = new Date(attributes?.Timestamp).toLocaleString();
   return (
     <section className="text-gray-600 py-6 body-font container mx-auto">
       <div className="flex items-center mb-2">
         <div className="mr-1 h-full">
           Contract{" "}
-          <span className="text-gray-500  text-xs mr-2">{address}</span>/
+          <span className="text-gray-500  text-xs mr-2">
+            <a
+              className="hover:underline text-blue-500"
+              href={`/address/${address}`}
+            >
+              {address}
+            </a>
+          </span>
+          /
           <span className="text-gray-500  text-xs mr-2 ml-2">
             {tokenId?.toString()}
           </span>
@@ -60,6 +84,7 @@ export const ContractToken = (props: ContractTokenProps) => {
                 </h2>
                 <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
                 <p className="text-base">{name}</p>
+                <p className="text-xs italic">{ts}</p>
               </div>
             </div>
             <div className="sm:w-2/3 sm:pl-8 sm:py-8 border-gray-200 mt-4 pt-4 sm:mt-0 text-center sm:text-left bg-white rounded shadow">
@@ -67,11 +92,40 @@ export const ContractToken = (props: ContractTokenProps) => {
             </div>
           </div>
         </div>
-        <EditContractToken
-          tokenChainData={tokenChainData}
-          address={address}
-          tokenId={tokenId}
-        />
+        <div className="flex flex-col border rounded bg-white p-4 text-xs mb-4">
+          <h2 className="text-2xl font-medium text-gray-900 title-font mb-2">
+            Meta data
+          </h2>
+          <div className="flex p-2 border-b border-gray-100 mb-2">
+            <div className="w-1/4 tracking-widest title-font">IPFS</div>
+            <div className="w-3/4">
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={tokenURI || "#"}
+                className="text-blue-500 hover:underline"
+              >
+                {tokenChainData?.uri}
+              </a>
+            </div>
+          </div>
+          {data?.attributes.map((attr, key) => (
+            <div key={key} className="flex p-2 border-b border-gray-100 mb-2">
+              <div className="w-1/4 tracking-widest title-font">
+                {attr.trait_type}
+              </div>
+              <div className="w-3/4">{attr.value}</div>
+            </div>
+          ))}
+        </div>
+        {isOwner && (
+          <EditContractToken
+            tokenChainData={tokenChainData}
+            address={address}
+            tokenId={tokenId}
+            metadata={data}
+          />
+        )}
       </div>
     </section>
   );

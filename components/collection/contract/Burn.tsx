@@ -2,18 +2,24 @@ import { MouseEvent, useEffect } from "react";
 import { useWaitForTransaction, useContractWrite } from "wagmi";
 import contract from "../../mint/CloneableContract.json";
 import { useRouter } from "next/router";
+import { NFTMetadata } from "../../../types";
 type Props = {
   address: `0x${string}`;
   tokenId?: bigint;
+  metadata?: NFTMetadata | null;
 };
 export const Burn = (props: Props) => {
-  const { address, tokenId } = props;
+  const { address, tokenId, metadata } = props;
+
   const router = useRouter();
+
+  const url = metadata?.attributes.find((attr) => attr.trait_type === "URL");
+
   const { data, isLoading, write } = useContractWrite({
     address,
     abi: contract.abi,
     functionName: "burnToken",
-    args: ["1"],
+    args: [tokenId, url?.value],
   });
 
   const { isLoading: isLoadingTx, isSuccess: isSuccessTx } =

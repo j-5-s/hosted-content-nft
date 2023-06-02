@@ -15,8 +15,8 @@ export const Trait = (props: TraitProps) => {
 
   if (trait_type === "Text") {
     return (
-      <div className="flex border-t border-gray-200 py-2 flex-col items-center">
-        <span className="text-gray-500">Text Content</span>
+      <div className="flex border-t border-gray-200 py-2 flex-col ">
+        <span className="text-gray-500 text-xs">Text Content</span>
         <textarea
           rows={4}
           disabled

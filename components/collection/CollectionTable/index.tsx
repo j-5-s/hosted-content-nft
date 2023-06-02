@@ -16,7 +16,7 @@ export const CollectionTable = (props: CollectionTableProps) => {
           </th>
 
           <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-            Title
+            Name
           </th>
           <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
             Date

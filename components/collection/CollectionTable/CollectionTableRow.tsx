@@ -51,7 +51,7 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
         </a>
       </td>
       <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
-        {attributes?.Title || ""}
+        {data?.name || ""}
       </td>
       <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
         {date}

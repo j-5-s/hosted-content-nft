@@ -24,12 +24,10 @@ export const Mint = ({
   contractAddress,
   chainData,
 }: Props) => {
-  const { isConnected } = useAccount();
   const network = useNetwork();
   const router = useRouter();
   const { switchNetwork, chains } = useSwitchNetwork();
-  const [mounted, setMounted] = useState(false);
-  const [selectedContract, setSelectedContract] = useState("");
+  const [loading, setIsLoading] = useState(false);
   const [contractMeta, setContractMeta] = useState<ContractMeta | null>(null);
   const updateContractQueryParam = (
     contractAddress: string,
@@ -45,10 +43,6 @@ export const Mint = ({
       query,
     });
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const attributes = nftMetadata.attributes.reduce((acc, cur) => {
     return {
@@ -69,8 +63,6 @@ export const Mint = ({
   };
 
   const handleContractChange = (contract: Contract | undefined) => {
-    setSelectedContract(contract?.address || "");
-
     if (contract?.network) {
       const chain = chains.find((chain) => chain.network === contract.network);
       updateContractQueryParam(contract?.address, chain?.network);
@@ -93,6 +85,7 @@ export const Mint = ({
   }, [contractAddress]);
 
   const handleSubmit = (data: SubmitData) => {
+    setIsLoading(data.loading);
     if (data.success) {
       router.push(`/address/${contractAddress}`);
     }
@@ -111,11 +104,26 @@ export const Mint = ({
     >
       <div className="lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
         <div className="w-full">
-          {nftMetadata.attributes.map((attr, index) => (
-            <Trait key={index} trait={attr} />
-          ))}
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Metadata (IPFS)</span>
+          <div className="flex border-b border-gray-200 py-2 items-center">
+            <span className="text-gray-500 text-xs">Name</span>
+            <span className="ml-auto text-gray-900 text-xs">
+              {nftMetadata.name}
+            </span>
+          </div>
+          <div className="flex border-b border-gray-200 py-2 items-center">
+            <span className="text-gray-500 text-xs">Description</span>
+            <span className="ml-auto text-gray-900 text-xs">
+              {nftMetadata.description}
+            </span>
+          </div>
+          <h2 className="mb-2 text-xs py-2 mt-2">Metadata</h2>
+          <div className="ml-8">
+            {nftMetadata.attributes.map((attr, index) => (
+              <Trait key={index} trait={attr} />
+            ))}
+          </div>
+          <div className="flex border-t border-gray-200 py-2 items-center">
+            <span className="text-gray-500 text-xs">Metadata (IPFS)</span>
             <span className="ml-auto text-gray-900">
               <a
                 target="_blank"
@@ -127,8 +135,8 @@ export const Mint = ({
               </a>
             </span>
           </div>
-          <div className="flex border-t border-b border-gray-200 py-2">
-            <span className="text-gray-500">Image (IPFS)</span>
+          <div className="flex border-t border-b border-gray-200 py-2 items-center">
+            <span className="text-gray-500 text-xs">Image (IPFS)</span>
             <span className="ml-auto text-gray-900">
               <a
                 target="_blank"
@@ -150,13 +158,13 @@ export const Mint = ({
 
         <div className="flex w-full flex-col">
           <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Network</span>
+            <span className="text-gray-500 text-xs">Network</span>
             <div className="ml-auto text-gray-900 text-xs flex items-center">
               {network?.chain?.network}
             </div>
           </div>
           <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500">Contract Address</span>
+            <span className="text-gray-500 text-xs">Contract Address</span>
             <div className="ml-auto text-gray-900 flex">
               <ContractAddressSelector
                 defaultValue={value?.contractAddress}
@@ -170,6 +178,7 @@ export const Mint = ({
             </div>
           )}
           <MintButton
+            disabled={!!error || loading}
             isOwner={contractMeta?.data?.isOwner}
             value={contractMeta?.data?.clonePrice}
             symbol={network?.chain?.nativeCurrency?.symbol}

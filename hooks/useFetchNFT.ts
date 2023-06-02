@@ -17,6 +17,7 @@ type FetchState = {
 };
 
 export type TokenChainData = {
+  uri: string;
   creator: string;
   isClone: boolean;
   ownerOf: string;
@@ -34,7 +35,7 @@ export const useFetchNFT = (props: Props) => {
     error: null,
   });
 
-  const { data, isError, isLoading } = useContractRead({
+  const { data, isLoading } = useContractRead({
     address: contractAddress,
     abi: contract.abi,
     args: [tokenId],
@@ -81,6 +82,7 @@ export const useFetchNFT = (props: Props) => {
   });
 
   const chainData = {
+    uri: "",
     creator: "",
     isClone: false,
     ownerOf: "",
@@ -89,6 +91,7 @@ export const useFetchNFT = (props: Props) => {
   };
 
   if (readsResponse.data) {
+    chainData.uri = data as string;
     chainData.creator = readsResponse.data[0].result as unknown as string;
     chainData.isClone = readsResponse.data[1].result as unknown as boolean;
     chainData.ownerOf = readsResponse.data[2].result as unknown as string;
