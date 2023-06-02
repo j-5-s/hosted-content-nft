@@ -81,9 +81,9 @@ export const Collection = (props: CollectionProps) => {
   return (
     <div className="container py-6 mx-auto">
       <div className="flex items-center mb-2">
-        <div className="mr-1 h-full">
+        <div className="mr-1 h-full flex items-baseline">
           Contract{" "}
-          <span className="text-gray-500  text-xs mr-2">
+          <span className="text-gray-500 ml-2  text-xs mr-2">
             <Address>{address}</Address>
           </span>
         </div>

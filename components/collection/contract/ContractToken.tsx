@@ -36,14 +36,14 @@ export const ContractToken = (props: ContractTokenProps) => {
   return (
     <section className="text-gray-600 py-6 body-font container mx-auto">
       <div className="flex items-center mb-2">
-        <div className="mr-1 h-full">
+        <div className="mr-1 h-full flex items-baseline">
           Contract{" "}
-          <span className="text-gray-500  text-xs mr-2">
+          <span className="text-gray-500  text-xs mr-2 ml-2">
             <a
               className="hover:underline text-blue-500"
               href={`/address/${address}`}
             >
-              {address}
+              <Address>{address}</Address>
             </a>
           </span>
           /
