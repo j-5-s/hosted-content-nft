@@ -60,6 +60,12 @@ export const DeployContract = () => {
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
+    console.log([
+      contract.name,
+      contract.token,
+      contract.description,
+      BigInt(contract.defaultClonePrice),
+    ]);
     if (contract.name && contract.token) {
       try {
         setError(null);

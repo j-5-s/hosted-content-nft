@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useContractRead, useWalletClient, useNetwork } from "wagmi";
 import contract from "../mint/CloneableContract.json";
 import { NFTCard } from "./NFTCard";
@@ -19,11 +19,15 @@ type ContractData = {
   isLoading: boolean;
   isError: boolean;
 };
+type SortType = "ascending" | "descending";
+
 export const Collection = (props: CollectionProps) => {
   const { address } = props;
   const { data: walletClient } = useWalletClient();
   const network = useNetwork();
 
+  const [tokenList, setTokenList] = useState<bigint[]>();
+  const [sortType, setSortType] = useState<SortType>("descending");
   const [myItemsFilter, setMyItemsFilter] = useState(true);
   // 0 == all, 1 == clone, 2 == original
   const [cloneFilter, setCloneFilter] = useState(0);
@@ -39,6 +43,18 @@ export const Collection = (props: CollectionProps) => {
       ? !!(address && walletClient?.account.address)
       : !!address,
   });
+
+  useEffect(() => {
+    if (data) {
+      const updatedData = [...data];
+      if (sortType === "ascending") {
+        updatedData.sort((a, b) => Number(a) - Number(b));
+      } else {
+        updatedData.sort((a, b) => Number(b) - Number(a));
+      }
+      setTokenList(updatedData);
+    }
+  }, [data, sortType]);
 
   const filterAllItems = (value: boolean) => {
     setMyItemsFilter(value);
@@ -161,6 +177,17 @@ export const Collection = (props: CollectionProps) => {
                 <div className="flex">
                   <div className="flex items-center mr-2 text-xs">
                     <select
+                      value={sortType}
+                      onChange={(evt) =>
+                        setSortType(evt.target.value as SortType)
+                      }
+                    >
+                      <option value="ascending">Ascending</option>
+                      <option value="descending">Descending</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center mr-2 text-xs">
+                    <select
                       value={cloneFilter}
                       onChange={(evt) =>
                         setCloneFilter(parseInt(evt.target.value, 10))
@@ -193,7 +220,7 @@ export const Collection = (props: CollectionProps) => {
           <TabContent className="text-sm px-3">
             <TabBody id="list">
               <CollectionTable
-                tokens={data}
+                tokens={tokenList}
                 renderRow={(tokenId) => (
                   <CollectionTableRow
                     key={tokenId.toString()}
@@ -206,8 +233,8 @@ export const Collection = (props: CollectionProps) => {
               />
             </TabBody>
             <TabBody id="cards">
-              <div className="grid grid-cols-3 gap-4">
-                {data?.map((tokenId) => (
+              <div className="columns-3 gap-4">
+                {tokenList?.map((tokenId) => (
                   <NFTCard
                     key={tokenId.toString()}
                     tokenId={tokenId}
