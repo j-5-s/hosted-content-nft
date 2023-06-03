@@ -148,12 +148,12 @@ export const MintForm = (props: MintFormProps) => {
     if (data?.status === "success" && data?.result) {
       setTokenId(data.result as unknown as bigint);
     } else {
-      if (data?.status === "failure") {
+      if (data?.status === "failure" && !isOwner) {
         setError(new Error(data.error.message));
       }
       setTokenId(undefined);
     }
-  }, [getTokenIdByUrlResponseData]);
+  }, [getTokenIdByUrlResponseData, isOwner]);
 
   const cloneDataResponse = useContractReads({
     enabled: !!(tokenId && !isOwner),
