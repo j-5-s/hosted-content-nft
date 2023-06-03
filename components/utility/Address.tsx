@@ -29,7 +29,6 @@ export const Address = (props: AddressProps) => {
   }
 
   const isYou = fullAddress === account.address;
-
   if (link) {
     const url = getUrl({
       network: network.chain?.network,

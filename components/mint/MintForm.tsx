@@ -49,17 +49,6 @@ type PrepareCause = {
 
 const ONLY_OWNER_MESSAGE = "Only the contract owner may call the mint function";
 
-const getErrorMessage = (error?: PrepareCause) => {
-  if (error?.name === "ContractFunctionRevertedError") {
-    if (error.reason === "Ownable: caller is not the owner") {
-      return ONLY_OWNER_MESSAGE;
-    }
-    return error.reason;
-  }
-
-  return null;
-};
-
 export const MintForm = (props: MintFormProps) => {
   const {
     contractAddress,
