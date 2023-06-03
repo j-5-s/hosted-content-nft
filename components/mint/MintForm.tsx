@@ -72,7 +72,6 @@ export const MintForm = (props: MintFormProps) => {
     onError,
     onSubmit,
   } = props;
-  const router = useRouter();
   const account = useAccount();
   const [errorMessage, setError] = useState<Error | null>(null);
   const [tokenId, setTokenId] = useState<bigint | undefined>();
@@ -103,23 +102,22 @@ export const MintForm = (props: MintFormProps) => {
     opts.value = clonePrice;
   }
   const { config, error: prepareError } = usePrepareContractWrite(opts);
-
+  console.log(prepareError);
   const {
     data,
     error,
     write,
     isLoading: isNotificationLoading,
   } = useContractWrite(config);
-
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
 
   useEffect(() => {
-    if (onError && (error || prepareError)) {
-      onError((error || prepareError) as Error);
+    if (onError && (error || prepareError || errorMessage)) {
+      onError((errorMessage || error || prepareError) as Error);
     }
-  }, [error, prepareError]);
+  }, [error, prepareError, errorMessage]);
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -146,9 +144,13 @@ export const MintForm = (props: MintFormProps) => {
   const getTokenIdByUrlResponseData = getTokenIdByUrlResponse.data?.[0];
   useEffect(() => {
     const data = getTokenIdByUrlResponseData;
+    console.log(data);
     if (data?.status === "success" && data?.result) {
       setTokenId(data.result as unknown as bigint);
     } else {
+      if (data?.status === "failure") {
+        setError(new Error(data.error.message));
+      }
       setTokenId(undefined);
     }
   }, [getTokenIdByUrlResponseData]);

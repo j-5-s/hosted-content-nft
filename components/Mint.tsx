@@ -84,7 +84,7 @@ export const Mint = ({
 
   useEffect(() => {
     setError(null);
-  }, [contractAddress]);
+  }, [contractAddress, account.address]);
 
   const handleSubmit = (data: SubmitData) => {
     setIsLoading(data.loading);
