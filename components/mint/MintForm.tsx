@@ -148,6 +148,8 @@ export const MintForm = (props: MintFormProps) => {
     if (data?.status === "success" && data?.result) {
       setTokenId(data.result as unknown as bigint);
     } else {
+      // @todo !isOwner is needed because new urls will have an error
+      // response from getTokenIdByUrlResponseData
       if (data?.status === "failure" && !isOwner) {
         setError(new Error(data.error.message));
       }

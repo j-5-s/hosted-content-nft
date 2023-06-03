@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import type { NFTMetadata, NFTAttributes } from "../../../types";
-import { getImageURIFromIPFS, trimHash } from "../../util";
+import { getImageURIFromIPFS } from "../../util";
 import type { TokenChainData } from "../../../hooks/useFetchNFT";
 import { EditContractToken } from "./EditContractToken";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { Address } from "../../utility/Address";
 type ContractTokenProps = {
   data?: NFTMetadata | null;
@@ -20,12 +20,17 @@ export const ContractToken = (props: ContractTokenProps) => {
   const imgUrl = getImageURIFromIPFS(image);
   const tokenURI = getImageURIFromIPFS(tokenChainData?.uri);
   const account = useAccount();
-  // console.log(data, tokenChainData);
+  const network = useNetwork();
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
-  const isOwner = mounted && tokenChainData?.ownerOf === account?.address;
+
+  const isOwner =
+    mounted &&
+    tokenChainData?.ownerOf &&
+    tokenChainData?.ownerOf === account?.address;
   const attributes = data?.attributes.reduce((acc, attribute) => {
     return {
       ...acc,
@@ -33,24 +38,38 @@ export const ContractToken = (props: ContractTokenProps) => {
     };
   }, {} as Record<string, string>) as NFTAttributes;
   const ts = new Date(attributes?.Timestamp).toLocaleString();
+  const [, ipfsHash] = (tokenChainData?.uri || "").split("//");
+  const mintPath = `/mint?ipfsHash=${ipfsHash}&contractAddress=${address}&network=${network.chain?.network}`;
   return (
     <section className="text-gray-600 py-6 body-font container mx-auto">
-      <div className="flex items-center mb-2">
-        <div className="mr-1 h-full flex items-baseline">
-          Contract{" "}
-          <span className="text-gray-500  text-xs mr-2 ml-2">
-            <a
-              className="hover:underline text-blue-500"
-              href={`/address/${address}`}
-            >
-              <Address>{address}</Address>
-            </a>
-          </span>
-          /
-          <span className="text-gray-500  text-xs mr-2 ml-2">
-            {tokenId?.toString()}
-          </span>
+      <div className="flex justify-between mt-4 mb-2 items-baseline">
+        <div className="flex items-center">
+          <div className="mr-1 h-full flex items-baseline">
+            Contract{" "}
+            <span className="text-gray-500  text-xs mr-2 ml-2">
+              <a
+                className="hover:underline text-blue-500"
+                href={`/address/${address}`}
+              >
+                <Address>{address}</Address>
+              </a>
+            </span>
+            /
+            <span className="text-gray-500  text-xs mr-2 ml-2">
+              {tokenId?.toString()}
+            </span>
+          </div>
         </div>
+        {!isOwner && (
+          <div>
+            <a
+              href={mintPath}
+              className="flex-1 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
+            >
+              Mint Clone
+            </a>
+          </div>
+        )}
       </div>
       <div className="container mx-auto flex flex-col">
         <div className="">
