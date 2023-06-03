@@ -217,7 +217,7 @@ export const Collection = (props: CollectionProps) => {
             <Tab id="list">Token List</Tab>
             <Tab id="cards">Token Cards</Tab>
           </TabHeader>
-          <TabContent className="text-sm px-3">
+          <TabContent className="text-sm px-3 container  overflow-scroll">
             <TabBody id="list">
               <CollectionTable
                 tokens={tokenList}

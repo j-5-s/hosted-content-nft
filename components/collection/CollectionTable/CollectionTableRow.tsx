@@ -41,7 +41,7 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
           [{tokenId.toString()}]
         </a>
       </td>
-      <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
+      <td className="px-4 py-3 overflow-scroll whitespace-nowrap max-w-[10rem]">
         <a
           target="_blank"
           rel="noreferrer"
@@ -51,7 +51,7 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
           {attributes?.URL || ""}
         </a>
       </td>
-      <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
+      <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap  max-w-[10rem]">
         {data?.name || ""}
       </td>
       <td className="px-4 py-3 max-w-xs overflow-scroll whitespace-nowrap">
