@@ -41,13 +41,13 @@ export const ContractToken = (props: ContractTokenProps) => {
   const [, ipfsHash] = (tokenChainData?.uri || "").split("//");
   const mintPath = `/mint?ipfsHash=${ipfsHash}&contractAddress=${address}&network=${network.chain?.network}`;
   return (
-    <section className="text-gray-600 py-6 body-font container mx-auto px-2 md:px-0">
-      <div className="flex justify-between mt-4 mb-2 items-baseline">
+    <section className="py-6 container mx-auto px-2 md:px-0">
+      <div className="flex justify-between mb-2 items-baseline">
         <div className="flex items-center">
           <div className="mr-1 h-full flex items-baseline">
             Contract{" "}
-            <span className="text-gray-500  text-xs mr-2 ml-2">
-              <Address link trim>
+            <span className="text-gray-500 text-xs mr-2 ml-2">
+              <Address href={`/address/${address}`} link trim>
                 {address}
               </Address>
             </span>

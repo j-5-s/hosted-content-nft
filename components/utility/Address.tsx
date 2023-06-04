@@ -9,6 +9,7 @@ type AddressProps = {
   trimPost?: number;
   trim?: boolean;
   link?: boolean;
+  href?: string;
 };
 
 export const Address = (props: AddressProps) => {
@@ -18,6 +19,7 @@ export const Address = (props: AddressProps) => {
     trimPost = 0,
     trim = false,
     link = false,
+    href,
   } = props;
   const fullAddress = children as `0x${string}`;
   let addr = children as string;
@@ -37,16 +39,18 @@ export const Address = (props: AddressProps) => {
 
   const isYou = fullAddress === account.address;
   if (link) {
-    const url = getUrl({
-      network: network.chain?.network,
-      address: fullAddress,
-    });
+    const url =
+      href ||
+      getUrl({
+        network: network.chain?.network,
+        address: fullAddress,
+      });
     return (
       <div className="flex items-center">
         <a
           href={url}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={href ? "_self" : "_blank"}
+          rel={href ? "" : "noopener noreferrer"}
           className=" text-blue-500 hover:underline"
         >
           {addr}
