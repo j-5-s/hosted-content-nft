@@ -1,20 +1,14 @@
 import { useState, FormEvent, useEffect } from "react";
-import {
-  useAccount,
-  useNetwork,
-  useContractWrite,
-  useWaitForTransaction,
-} from "wagmi";
+import { useNetwork, useContractWrite, useWaitForTransaction } from "wagmi";
 import { formatEther } from "viem";
 import type { TokenChainData } from "../../../hooks/useFetchNFT";
 import { Check } from "../../icons/check";
 import { XCircle } from "../../icons/x-circle";
 import { InputPrice } from "../../form/InputPrice";
-import contract from "../../mint/CloneableContract.json";
+import abi from "../../../contracts/cloneable/abi.json";
 import { Burn } from "./Burn";
 import { NFTMetadata } from "../../../types";
 import { Address } from "../../utility/Address";
-import { getUrl } from "../../util";
 
 type EditContractProps = {
   tokenChainData?: TokenChainData | null;
@@ -27,7 +21,6 @@ export const EditContractToken = (props: EditContractProps) => {
   const [editMode, setEditMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { tokenChainData, address, tokenId, metadata } = props;
-  const account = useAccount();
   const network = useNetwork();
   const [fields, setFields] = useState({
     clonePrice: tokenChainData?.clonePrice?.toString(),
@@ -47,7 +40,7 @@ export const EditContractToken = (props: EditContractProps) => {
 
   const { data, isLoading, write } = useContractWrite({
     address,
-    abi: contract.abi,
+    abi,
     functionName: "setClonePrice",
     args: [tokenId, fields.clonePrice],
   });

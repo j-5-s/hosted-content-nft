@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, FormEvent, useEffect } from "react";
 import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import type { ChainData } from "../../hooks/useContract";
-import cloneableContract from "../mint/CloneableContract.json";
+import contractAbi from "../../contracts/cloneable/abi.json";
 import { formatEther } from "viem";
 
 type Props = {
@@ -15,11 +15,12 @@ export const EditContract = ({ chainData, address }: Props) => {
   const [fields, setFields] = useState({
     description: chainData?.description,
     defaultClonePrice: chainData?.defaultClonePrice as bigint,
+    // approvedMinters: chainData?.approvedMinters,
   });
   const isOwner = chainData?.owner && chainData?.owner === account.address;
   const { data, isLoading, write } = useContractWrite({
     address,
-    abi: cloneableContract.abi,
+    abi: contractAbi,
     functionName: "setDescription",
     args: [fields.description],
   });

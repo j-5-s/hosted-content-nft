@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useContractRead, useWalletClient, useNetwork } from "wagmi";
-import contract from "../mint/CloneableContract.json";
+import abi from "../../contracts/cloneable/abi.json";
 import { NFTCard } from "./NFTCard";
 import { getUrl } from "../util";
 import { Copy } from "../icons/copy";
@@ -34,7 +34,7 @@ export const Collection = (props: CollectionProps) => {
 
   const { data }: ContractData = useContractRead({
     address: address as `0x${string}`,
-    abi: contract.abi,
+    abi: abi,
     args: myItemsFilter
       ? [walletClient?.account.address, cloneFilter]
       : [cloneFilter],
@@ -67,6 +67,8 @@ export const Collection = (props: CollectionProps) => {
   } = useContract({
     address: address as `0x${string}`,
   });
+
+  console.log(contractData);
 
   const contractLink = getUrl({
     address: contractData?.creator,

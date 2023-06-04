@@ -1,7 +1,6 @@
 import { useState, useEffect, ReactNode, FormEvent } from "react";
-import { useAccount, useNetwork } from "wagmi";
-import { useRouter } from "next/router";
-import cloneableContract from "./CloneableContract.json";
+import { useAccount } from "wagmi";
+import contractAbi from "../../contracts/cloneable/abi.json";
 import {
   usePrepareContractWrite,
   useContractWrite,
@@ -41,14 +40,6 @@ type MintFormProps = {
   onSubmit?: (data: SubmitData) => void;
 };
 
-type PrepareCause = {
-  name: string;
-  reason: string;
-  shortMessage: string;
-};
-
-const ONLY_OWNER_MESSAGE = "Only the contract owner may call the mint function";
-
 export const MintForm = (props: MintFormProps) => {
   const {
     contractAddress,
@@ -75,7 +66,7 @@ export const MintForm = (props: MintFormProps) => {
 
   const opts = {
     address: contractAddress,
-    abi: cloneableContract.abi,
+    abi: contractAbi,
     functionName: !isOwner ? "mintClone" : "mintNFT",
     args: !isOwner ? [tokenId, tokenURI] : [tokenURI, url],
     enabled: !isOwner ? !!tokenId : true,
@@ -115,7 +106,7 @@ export const MintForm = (props: MintFormProps) => {
 
   const contractInput = {
     address: contractAddress,
-    abi: cloneableContract.abi,
+    abi: contractAbi,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
 

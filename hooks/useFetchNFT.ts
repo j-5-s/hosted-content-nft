@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useContractRead, useContractReads } from "wagmi";
-import contract from "../components/mint/CloneableContract.json";
+import abi from "../contracts/cloneable/abi.json";
 import { fetchData } from "../components/util";
 import { NFTMetadata } from "../types";
 
@@ -37,7 +37,7 @@ export const useFetchNFT = (props: Props) => {
 
   const { data, isLoading } = useContractRead({
     address: contractAddress,
-    abi: contract.abi,
+    abi,
     args: [tokenId],
     functionName: "tokenURI",
     staleTime: 1000 * 60 * 5,
@@ -46,7 +46,7 @@ export const useFetchNFT = (props: Props) => {
 
   const contractInput = {
     address: contractAddress,
-    abi: contract.abi,
+    abi,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
 

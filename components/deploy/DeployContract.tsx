@@ -1,8 +1,10 @@
 import { FormEvent, useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useWalletClient, useWaitForTransaction, useNetwork } from "wagmi";
-import CloneableContract from "../mint/CloneableContract.json";
+import CloneableContract from "../../contracts/cloneable/abi.json";
+import ByteCode from "../../contracts/cloneable/bytecode.json";
 import { Networks } from "./Networks";
+
 import { InputPrice } from "../form/InputPrice";
 
 type ContractArguments = {
@@ -71,7 +73,7 @@ export const DeployContract = () => {
         setError(null);
         setIsDeployingContract(true);
         const hash = await walletClient?.deployContract({
-          abi: CloneableContract.abi,
+          abi: CloneableContract,
           account: walletClient.account,
           args: [
             contract.name,
@@ -79,7 +81,7 @@ export const DeployContract = () => {
             contract.description,
             BigInt(contract.defaultClonePrice),
           ],
-          bytecode: CloneableContract.bytecode as `0x${string}`,
+          bytecode: ByteCode.bytecode as `0x${string}`,
         });
 
         setHash(hash);

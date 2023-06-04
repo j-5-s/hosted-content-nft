@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect } from "react";
 import { useWaitForTransaction, useContractWrite } from "wagmi";
-import contract from "../../mint/CloneableContract.json";
+import abi from "../../../contracts/cloneable/abi.json";
 import { useRouter } from "next/router";
 import { NFTMetadata } from "../../../types";
 type Props = {
@@ -17,7 +17,7 @@ export const Burn = (props: Props) => {
 
   const { data, isLoading, write } = useContractWrite({
     address,
-    abi: contract.abi,
+    abi,
     functionName: "burnToken",
     args: [tokenId, url?.value],
   });

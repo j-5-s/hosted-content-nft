@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useContractReads, useAccount, useNetwork, useBalance } from "wagmi";
 import { db } from "../db/db";
-import contract from "../components/mint/CloneableContract.json";
+import abi from "../contracts/cloneable/abi.json";
 
 type Props = {
   address?: `0x${string}` | undefined;
@@ -45,7 +45,7 @@ export const useContract = (props: Props): ReturnData => {
 
   const contractInput = {
     address: address,
-    abi: contract.abi,
+    abi,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
   let errorMsg;
