@@ -7,16 +7,23 @@ type AddressProps = {
   children: ReactNode;
   trimPre?: number;
   trimPost?: number;
+  trim?: boolean;
   link?: boolean;
 };
 
 export const Address = (props: AddressProps) => {
-  const { children, trimPre = 0, trimPost = 0, link = false } = props;
+  const {
+    children,
+    trimPre = 0,
+    trimPost = 0,
+    trim = false,
+    link = false,
+  } = props;
   const fullAddress = children as `0x${string}`;
   let addr = children as string;
 
-  if (trimPre || trimPost) {
-    addr = trimHash(addr, trimPre, trimPost);
+  if (trimPre || trimPost || trim) {
+    addr = trimHash(addr, trimPre || 6, trimPost || 4);
   }
   const network = useNetwork();
   const account = useAccount();

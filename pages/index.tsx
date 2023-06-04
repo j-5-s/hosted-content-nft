@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         <SearchField defaultValue={search} network={networkParam} />
       </Header>
       <div className="bg-gray-100 flex-1">
-        <section className="text-gray-600 body-font overflow-hidden flex flex-col">
+        <section className="text-gray-600 body-font overflow-hidden flex flex-col px-2 md:px-0">
           <div className="container flex mx-auto py-6 justify-end">
             <div>
               <a

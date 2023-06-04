@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { NFTMetadata, NFTAttributes } from "../../../types";
-import { getImageURIFromIPFS } from "../../util";
+import { getImageURIFromIPFS, trimHash } from "../../util";
 import type { TokenChainData } from "../../../hooks/useFetchNFT";
 import { EditContractToken } from "./EditContractToken";
 import { useAccount, useNetwork } from "wagmi";
@@ -41,18 +41,15 @@ export const ContractToken = (props: ContractTokenProps) => {
   const [, ipfsHash] = (tokenChainData?.uri || "").split("//");
   const mintPath = `/mint?ipfsHash=${ipfsHash}&contractAddress=${address}&network=${network.chain?.network}`;
   return (
-    <section className="text-gray-600 py-6 body-font container mx-auto">
+    <section className="text-gray-600 py-6 body-font container mx-auto px-2 md:px-0">
       <div className="flex justify-between mt-4 mb-2 items-baseline">
         <div className="flex items-center">
           <div className="mr-1 h-full flex items-baseline">
             Contract{" "}
             <span className="text-gray-500  text-xs mr-2 ml-2">
-              <a
-                className="hover:underline text-blue-500"
-                href={`/address/${address}`}
-              >
-                <Address>{address}</Address>
-              </a>
+              <Address link trim>
+                {address}
+              </Address>
             </span>
             /
             <span className="text-gray-500  text-xs mr-2 ml-2">
@@ -82,8 +79,8 @@ export const ContractToken = (props: ContractTokenProps) => {
               />
             )}
           </div>
-          <div className="flex flex-col sm:flex-row mt-10 mb-4">
-            <div className="sm:w-1/3 text-center sm:py-8 bg-white rounded shadow mr-2 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 mt-4 mb-4 gap-4">
+            <div className="text-center sm:py-8 bg-white rounded shadow py-2">
               <div className="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
                 <svg
                   fill="none"
@@ -100,15 +97,15 @@ export const ContractToken = (props: ContractTokenProps) => {
               </div>
               <div className="flex flex-col items-center text-center justify-center">
                 <h2 className="font-medium title-font mt-4 text-gray-900 text-lg">
-                  <Address>{creator}</Address>
+                  <Address trim>{creator}</Address>
                 </h2>
                 <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
                 <p className="text-base">{name}</p>
                 <p className="text-xs italic">{ts}</p>
               </div>
             </div>
-            <div className="sm:w-2/3 sm:pl-8 sm:py-8 border-gray-200 mt-4 pt-4 sm:mt-0 text-center sm:text-left bg-white rounded shadow">
-              <p className="leading-relaxed text-lg mb-4">{description}</p>
+            <div className=" border-gray-200 p-4  bg-white rounded shadow">
+              <p className="leading-relaxed text-sm mb-4">{description}</p>
             </div>
           </div>
         </div>
@@ -125,7 +122,7 @@ export const ContractToken = (props: ContractTokenProps) => {
                 href={tokenURI || "#"}
                 className="text-blue-500 hover:underline"
               >
-                {tokenChainData?.uri}
+                {trimHash(tokenChainData?.uri, 6, 4)}
               </a>
             </div>
           </div>
@@ -134,7 +131,15 @@ export const ContractToken = (props: ContractTokenProps) => {
               <div className="w-1/4 tracking-widest title-font">
                 {attr.trait_type}
               </div>
-              <div className="w-3/4">{attr.value}</div>
+              <div className="w-3/4">
+                {attr.trait_type === "address" ? (
+                  <Address link trim>
+                    {attr.value}
+                  </Address>
+                ) : (
+                  attr.value
+                )}
+              </div>
             </div>
           ))}
         </div>

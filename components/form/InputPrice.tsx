@@ -94,7 +94,7 @@ export const InputPrice = (props: Props) => {
       />
       <div className="absolute right-0 h-full flex items-center">
         <button
-          className="mr-8 w-16 border  bg-blue-500 text-white focus:outline-none hover:bg-blue-600 rounded px-2"
+          className="mr-4 w-16 border  bg-blue-500 text-white focus:outline-none hover:bg-blue-600 rounded px-2"
           onClick={handleSubmit}
         >
           {mounted && unitOfValue}

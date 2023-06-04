@@ -81,7 +81,7 @@ export const EditContract = ({ chainData, address }: Props) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex-1 bg-white rounded border border-gray-200 m-4 shadow flex flex-col justify-between"
+      className=" bg-white rounded border border-gray-200 m-2 md:m-4 shadow flex flex-col justify-between"
     >
       <div>
         <div className="px-2 py-3 mb-2 justify-between border-b border-gray-200 w-full items-center">
@@ -131,7 +131,7 @@ export const EditContract = ({ chainData, address }: Props) => {
           <div className="flex flex-col flex-1 items-start">
             {!editing &&
               fields.approvedMinters?.map((minter, key) => (
-                <Address key={key} link>
+                <Address key={key} link trimPre={6} trimPost={4}>
                   {minter}
                 </Address>
               ))}

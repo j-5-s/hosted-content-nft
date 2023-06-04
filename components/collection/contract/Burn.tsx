@@ -3,19 +3,21 @@ import { useWaitForTransaction, useContractWrite } from "wagmi";
 import abi from "../../../contracts/cloneable/abi.json";
 import { useRouter } from "next/router";
 import { NFTMetadata } from "../../../types";
+
 type Props = {
   address: `0x${string}`;
   tokenId?: bigint;
   metadata?: NFTMetadata | null;
+  onError?: (err: Error) => void;
 };
 export const Burn = (props: Props) => {
-  const { address, tokenId, metadata } = props;
+  const { address, tokenId, metadata, onError } = props;
 
   const router = useRouter();
 
   const url = metadata?.attributes.find((attr) => attr.trait_type === "URL");
 
-  const { data, isLoading, write } = useContractWrite({
+  const { data, isLoading, write, error } = useContractWrite({
     address,
     abi,
     functionName: "burnToken",
@@ -31,6 +33,13 @@ export const Burn = (props: Props) => {
     evt.preventDefault();
     write?.();
   };
+
+  useEffect(() => {
+    if (error && onError) {
+      onError(error);
+    }
+  }, [error]);
+
   useEffect(() => {
     if (isSuccessTx) {
       router.push(`/address/${address}`);

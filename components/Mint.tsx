@@ -92,7 +92,6 @@ export const Mint = ({
       router.push(`/address/${contractAddress}`);
     }
   };
-  const isOwner = !!(chainData?.owner && chainData.owner === account.address);
 
   return (
     <MintForm

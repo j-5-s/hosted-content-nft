@@ -1,6 +1,6 @@
 import { Header } from "../../../components/header";
 import { useFetchNFT } from "../../../hooks/useFetchNFT";
-import { getFirstQueryParam, trimHash } from "../../../components/util";
+import { getFirstQueryParam } from "../../../components/util";
 import { ContractToken } from "../../../components/collection/contract/ContractToken";
 import { SearchField } from "../../../components/collection/SearchField";
 export default function NFTPage() {
