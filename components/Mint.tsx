@@ -184,7 +184,7 @@ export const Mint = ({
             defaultClonePrice={chainData?.defaultClonePrice}
             hasItemizedClonePrice={!!contractMeta?.data?.hasItemizedClonePrice}
             disabled={!!error || loading}
-            isOwner={isOwner}
+            isOwner={contractMeta?.data?.isOwnerOrApprovedMinter}
             value={contractMeta?.data?.clonePrice}
             symbol={network?.chain?.nativeCurrency?.symbol}
           />

@@ -24,6 +24,7 @@ export type ChainData = {
   description: string;
   createdAt: number;
   defaultClonePrice: bigint;
+  approvedMinters: `0x${string}`[];
 };
 
 type ReturnData = {
@@ -84,6 +85,10 @@ export const useContract = (props: Props): ReturnData => {
         ...contractInput,
         functionName: "getDefaultClonePrice",
       },
+      {
+        ...contractInput,
+        functionName: "getApprovedMinters",
+      },
     ],
   });
 
@@ -96,6 +101,7 @@ export const useContract = (props: Props): ReturnData => {
     description: "",
     createdAt: 0,
     defaultClonePrice: BigInt(0),
+    approvedMinters: [],
   } as ChainData;
 
   if (balance) {
@@ -122,6 +128,8 @@ export const useContract = (props: Props): ReturnData => {
     if (typeof defaultClonePrice !== "undefined") {
       ret.defaultClonePrice = BigInt(defaultClonePrice);
     }
+    const approvedMinters = data[8].result as unknown as `0x${string}`[];
+    ret.approvedMinters = approvedMinters;
   }
 
   // @todo better error handling.

@@ -3,6 +3,8 @@ import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import type { ChainData } from "../../hooks/useContract";
 import contractAbi from "../../contracts/cloneable/abi.json";
 import { formatEther } from "viem";
+import { InputPrice } from "../form/InputPrice";
+import { Address } from "../utility/Address";
 
 type Props = {
   chainData?: ChainData;
@@ -15,14 +17,18 @@ export const EditContract = ({ chainData, address }: Props) => {
   const [fields, setFields] = useState({
     description: chainData?.description,
     defaultClonePrice: chainData?.defaultClonePrice as bigint,
-    // approvedMinters: chainData?.approvedMinters,
+    approvedMinters: chainData?.approvedMinters,
   });
   const isOwner = chainData?.owner && chainData?.owner === account.address;
   const { data, isLoading, write } = useContractWrite({
     address,
     abi: contractAbi,
-    functionName: "setDescription",
-    args: [fields.description],
+    functionName: "updateContract",
+    args: [
+      fields.description,
+      fields.defaultClonePrice,
+      fields.approvedMinters,
+    ],
   });
 
   const { isLoading: isLoadingTx, isSuccess: isSuccessTx } =
@@ -36,6 +42,28 @@ export const EditContract = ({ chainData, address }: Props) => {
         ...prev,
         [field]: evt.target.value,
       }));
+    };
+  };
+
+  const handleClonePriceChange = (price: string) => {
+    setFields((prev) => ({
+      ...prev,
+      defaultClonePrice: BigInt(price),
+    }));
+  };
+
+  const handleMinterChange = (index: number) => {
+    return (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFields((prevStat) => {
+        const approvedMinters = [
+          ...(prevStat.approvedMinters || []),
+        ] as `0x${string}`[];
+        approvedMinters[index] = evt.target.value as `0x${string}`;
+        return {
+          ...prevStat,
+          approvedMinters,
+        };
+      });
     };
   };
 
@@ -63,22 +91,29 @@ export const EditContract = ({ chainData, address }: Props) => {
           <div></div>
         </div>
         <div className="flex p-2 border-b border-gray-100 mb-2 mx-2 items-center">
-          <div className="tracking-widest title-font">Default Clone Price</div>
-          <div className="flex-1 ml-2">
+          <div className="w-1/4 tracking-widest title-font ">
+            Default Clone Price
+          </div>
+          <div className="flex-1">
             {!editing && formatEther(BigInt(fields.defaultClonePrice || 0))}
             {editing && (
-              <input
-                type="text"
-                value={fields.defaultClonePrice.toString()}
-                onChange={handleChange("defaultClonePrice")}
-                className="bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 outline-none text-gray-700 px-2 w-full leading-6 transition-colors duration-200 ease-in-out"
+              <InputPrice
+                initialValue={formatEther(
+                  BigInt(fields.defaultClonePrice || 0)
+                )}
+                id="defaultClonePrice"
+                name="defaultClonePrice"
+                required
+                onChange={handleClonePriceChange}
               />
             )}
           </div>
         </div>
-        <div className="flex p-2 flex-col border-b border-gray-100 mb-2 mx-2">
-          <div className=" tracking-widest title-font mb-2">Description</div>
-          <div className="">
+        <div className="flex p-2  border-b border-gray-100 mb-2 mx-2">
+          <div className="w-1/4 tracking-widest title-font mb-2">
+            Description
+          </div>
+          <div className="flex-1">
             {!editing && fields.description}
             {editing && (
               <textarea
@@ -86,6 +121,65 @@ export const EditContract = ({ chainData, address }: Props) => {
                 onChange={handleChange("description")}
                 className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 outline-none text-gray-700  px-2 leading-6 transition-colors duration-200 ease-in-out"
               />
+            )}
+          </div>
+        </div>
+        <div className="flex p-2 border-b border-gray-100 mb-2 mx-2">
+          <div className="w-1/4 tracking-widest title-font mb-2">
+            Approved Minters
+          </div>
+          <div className="flex flex-col flex-1 items-start">
+            {!editing &&
+              fields.approvedMinters?.map((minter, key) => (
+                <Address key={key} link>
+                  {minter}
+                </Address>
+              ))}
+            {editing &&
+              fields.approvedMinters?.map((minter, key) => (
+                <div
+                  key={key}
+                  className="flex items-center w-full justify-center mb-2"
+                >
+                  <input
+                    type="text"
+                    className="flex-1  bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-transparent focus:ring-2 focus:ring-indigo-200 outline-none text-gray-700 px-2 leading-6 transition-colors duration-200 ease-in-out"
+                    key={key}
+                    value={minter}
+                    onChange={handleMinterChange(key)}
+                  />
+                  <button
+                    className="ml-2"
+                    onClick={(evt) => {
+                      evt.preventDefault();
+                      setFields((prevState) => ({
+                        ...prevState,
+                        approvedMinters: [
+                          ...(prevState.approvedMinters?.slice(0, key) || []),
+                          ...(prevState.approvedMinters?.slice(key + 1) || []),
+                        ],
+                      }));
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            {editing && (
+              <button
+                onClick={(evt) => {
+                  evt.preventDefault();
+                  setFields((prevState) => ({
+                    ...prevState,
+                    approvedMinters: [
+                      ...(prevState.approvedMinters as `0x${string}`[]),
+                      "" as `0x${string}`,
+                    ],
+                  }));
+                }}
+              >
+                + Minter
+              </button>
             )}
           </div>
         </div>
@@ -102,6 +196,7 @@ export const EditContract = ({ chainData, address }: Props) => {
           )}
           {editing && (
             <button
+              disabled={isLoading || isLoadingTx}
               type="submit"
               className="min-w-24 mr-2 flex items-center text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg disabled:opacity-25"
             >
@@ -110,6 +205,7 @@ export const EditContract = ({ chainData, address }: Props) => {
           )}
           {editing && (
             <button
+              disabled={isLoading || isLoadingTx}
               onClick={() => setEditing(false)}
               className="min-w-24 flex items-center text-blue-500 border-blue-500  border py-2 px-6 focus:outline-none hover:bg-gray-100 rounded text-lg disabled:opacity-25"
             >
