@@ -1,5 +1,11 @@
 import { ChangeEvent, useState, FormEvent, useEffect } from "react";
-import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  useAccount,
+  useContractWrite,
+  useNetwork,
+  useWaitForTransaction,
+} from "wagmi";
+import QRCode from "react-qr-code";
 import type { ChainData } from "../../hooks/useContract";
 import contractAbi from "../../contracts/cloneable/abi.json";
 import { formatEther } from "viem";
@@ -14,6 +20,7 @@ type Props = {
 export const EditContract = ({ chainData, address }: Props) => {
   const [editing, setEditing] = useState(false);
   const account = useAccount();
+  const network = useNetwork();
   const [fields, setFields] = useState({
     description: chainData?.description,
     defaultClonePrice: chainData?.defaultClonePrice as bigint,
@@ -30,6 +37,7 @@ export const EditContract = ({ chainData, address }: Props) => {
       fields.approvedMinters,
     ],
   });
+  console.log(chainData);
 
   const { isLoading: isLoadingTx, isSuccess: isSuccessTx } =
     useWaitForTransaction({
@@ -128,6 +136,7 @@ export const EditContract = ({ chainData, address }: Props) => {
           <div className="w-1/4 tracking-widest title-font mb-2">
             Approved Minters
           </div>
+
           <div className="flex flex-col flex-1 items-start">
             {!editing &&
               fields.approvedMinters?.map((minter, key) => (
@@ -183,6 +192,18 @@ export const EditContract = ({ chainData, address }: Props) => {
             )}
           </div>
         </div>
+        {!editing && (
+          <div className="flex p-2 border-b border-gray-100 mb-2 mx-2">
+            <div className="w-1/4 tracking-widest title-font mb-2">Export</div>
+
+            <div className="flex flex-col flex-1 items-start">
+              <QRCode
+                size={128}
+                value={`https://nft.j5s.dev/address/${address}?import=true&network=${network?.chain?.network}`}
+              />
+            </div>
+          </div>
+        )}
       </div>
       {isOwner && (
         <div className="flex border-t w-full px-4 py-2">

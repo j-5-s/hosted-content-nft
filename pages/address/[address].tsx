@@ -9,6 +9,7 @@ import { SearchField } from "../../components/collection/SearchField";
 const Search: NextPage = () => {
   const search = getFirstQueryParam("address");
   const networkParam = getFirstQueryParam("network");
+  const importsContractToDB = getFirstQueryParam("import") === "true";
   const { switchNetwork, chains } = useSwitchNetwork();
 
   useEffect(() => {
@@ -25,7 +26,12 @@ const Search: NextPage = () => {
         <SearchField network={networkParam} />
       </Header>
       <div className="bg-gray-100 flex-1">
-        {search && <Collection address={search as `0x${string}`} />}
+        {search && (
+          <Collection
+            address={search as `0x${string}`}
+            importsContractToDB={importsContractToDB}
+          />
+        )}
       </div>
     </section>
   );

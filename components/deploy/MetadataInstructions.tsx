@@ -17,10 +17,10 @@ export const MetadataInstructions = (props: Props) => {
     setNetworkState(network?.chain?.network);
   }, [network?.chain?.network]);
   return (
-    <div className="py-6">
-      <section>
-        <div className="container mx-auto flex flex-row bg-white p-4 border rounded mb-6">
-          <div className="w-1/2 flex flex-col items-center justify-center">
+    <div className="py-6 px-2 md:px-0">
+      <section className="container mx-auto">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 border rounded mb-6">
+          <div className="flex flex-col items-center justify-center">
             <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
               Next Steps
             </h2>
@@ -30,7 +30,7 @@ export const MetadataInstructions = (props: Props) => {
               yours.
             </p>
           </div>
-          <div className="w-1/2">
+          <div className="">
             <div className="flex w-full flex-col items-end">
               <div className="border border-gray-200 rounded mb-4 flex flex-col justify-end shadow">
                 <Image
@@ -44,11 +44,11 @@ export const MetadataInstructions = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="container mx-auto flex  md:flex-row flex-col bg-white p-4 border rounded mb-6">
-          <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-white p-4 border rounded mb-6">
+          <div className=" flex flex-col  items-center text-left">
             <div className="w-full mb-12">
               <p className="mb-4 leading-relaxed border-b">
-                Install the meta tag:
+                Install the meta tags:
               </p>
               <h2 className="text-xs text-indigo-500 tracking-widest font-medium title-font mb-2">
                 Meta:
@@ -99,14 +99,18 @@ export const MetadataInstructions = (props: Props) => {
             </div>
           </div>
 
-          <div className="border border-gray-200 rounded mb-4 flex justify-end shadow">
-            <Image
-              width={500}
-              height={375}
-              className="object-cover object-center "
-              alt="hero"
-              src="/metatag.png"
-            />
+          <div className="">
+            <div className="flex w-full flex-col items-end">
+              <div className="border border-gray-200 rounded mb-4 flex flex-col justify-end shadow">
+                <Image
+                  width={500}
+                  height={328}
+                  className="object-cover object-center  "
+                  alt="hero"
+                  src="/metatag.png"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -13,6 +13,7 @@ import { Address } from "../utility/Address";
 import { EditContract } from "./EditContract";
 type CollectionProps = {
   address: `0x${string}`;
+  importsContractToDB?: boolean;
 };
 type ContractData = {
   data: bigint[] | undefined;
@@ -22,7 +23,7 @@ type ContractData = {
 type SortType = "ascending" | "descending";
 
 export const Collection = (props: CollectionProps) => {
-  const { address } = props;
+  const { address, importsContractToDB } = props;
   const { data: walletClient } = useWalletClient();
   const network = useNetwork();
 
@@ -66,6 +67,7 @@ export const Collection = (props: CollectionProps) => {
     loading,
   } = useContract({
     address: address as `0x${string}`,
+    importsContractToDB,
   });
 
   const contractLink = getUrl({
