@@ -16,7 +16,10 @@ export const MintLoading = (props: Props) => {
       <div className="container px-5 py-24 mx-auto">
         {ipfsHash && (
           <div className="xl:w-1/2 lg:w-3/4 w-full mx-auto text-center">
-            <div role="status" className="mb-4">
+            <div
+              role="status"
+              className="mb-4 flex justify-center text-center items-center ml-1"
+            >
               <svg
                 aria-hidden="true"
                 className="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600 inline-block"
@@ -35,10 +38,10 @@ export const MintLoading = (props: Props) => {
               </svg>
               <span className="sr-only">Loading...</span>
             </div>
-            <h2 className="text-lg text-indigo-500 tracking-widest font-medium title-font mb-1 uppercase">
+            <h2 className="text-sm text-indigo-500 tracking-widest font-medium title-font mb-1 uppercase">
               Loading data from{" "}
             </h2>
-            <p className="leading-relaxed text-lg">
+            <p className="leading-relaxed text-sm">
               <a
                 target="_blank"
                 rel="noreferrer"
@@ -48,7 +51,9 @@ export const MintLoading = (props: Props) => {
                 https://ipfs.io/ipfs/{ipfsHash}
               </a>
             </p>
-            <span className="inline-block h-1 w-10 rounded bg-indigo-500 mt-8 mb-6"></span>
+            <div className="flex justify-center ">
+              <span className="inline-block h-1 w-10 rounded bg-indigo-500 mt-8 mb-6"></span>
+            </div>
             <p className="text-gray-500">
               It may a minute to retrieve data immediately after pinning to
               IPFS. This is because IPFS is a decentralized platform that

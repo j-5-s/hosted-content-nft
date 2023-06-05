@@ -165,7 +165,7 @@ export const Mint = ({
                 {network?.chain?.network}
               </span>
             </div>
-            <div className="flex py-2">
+            <div className="flex py-2 mb-2">
               <span className="text-gray-500 text-xs">Contract Address</span>
               <div className="ml-auto text-gray-900 flex">
                 <ContractAddressSelector
@@ -187,7 +187,7 @@ export const Mint = ({
               hasItemizedClonePrice={
                 !!contractMeta?.data?.hasItemizedClonePrice
               }
-              disabled={!!error || loading}
+              disabled={!!error || loading || !contractAddress}
               isOwner={contractMeta?.data?.isOwnerOrApprovedMinter}
               value={contractMeta?.data?.clonePrice}
               symbol={network?.chain?.nativeCurrency?.symbol}

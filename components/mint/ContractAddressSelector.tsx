@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
+import cs from "classnames";
 import { db } from "../../db/db";
 import type { Contract } from "../../db/db";
 import { trimHash, getUrl } from "../util";
@@ -41,7 +42,11 @@ export const ContractAddressSelector = (props: Props) => {
   });
 
   return (
-    <div className="flex items-end flex-col">
+    <div
+      className={cs("flex items-end flex-col", {
+        "text-red-500": !defaultValue,
+      })}
+    >
       <div className="text-xs mr-2 flex">
         {chain && (
           <a

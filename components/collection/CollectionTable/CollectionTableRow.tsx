@@ -29,6 +29,7 @@ export const CollectionTableRow = (props: CollectionTableRowProps) => {
     address: chainData?.creator,
     network,
   });
+
   return (
     <tr>
       <td className="px-4 py-3">
