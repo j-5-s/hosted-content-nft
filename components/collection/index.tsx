@@ -164,7 +164,7 @@ export const Collection = (props: CollectionProps) => {
         <div className="flex -mx-2 md:-m-4 overflow-scroll">
           <Tabs
             defaultTab="list"
-            className="flex-1 bg-white rounded border border-gray-200 m-4 pb-4 shadow"
+            className="flex-1 bg-white rounded border border-gray-200 m-2 md:m-4 pb-4 shadow"
           >
             <TabHeader
               actions={() => {

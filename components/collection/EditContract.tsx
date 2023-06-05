@@ -199,7 +199,7 @@ export const EditContract = ({ chainData, address }: Props) => {
             <div className="flex flex-col flex-1 items-start">
               <QRCode
                 size={128}
-                value={`https://nft.j5s.dev/address/${address}?import=true&network=${network?.chain?.network}`}
+                value={`https://metamask.app.link/dapp/nft.j5s.dev/address/${address}?import=true&network=${network?.chain?.network}`}
               />
             </div>
           </div>
