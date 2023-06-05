@@ -41,8 +41,8 @@ export const ContractAddressSelector = (props: Props) => {
   });
 
   return (
-    <div className="flex items-center">
-      <div className="text-xs mr-2 flex items-end">
+    <div className="flex items-end flex-col">
+      <div className="text-xs mr-2 flex">
         {chain && (
           <a
             target="_blank"
@@ -56,7 +56,7 @@ export const ContractAddressSelector = (props: Props) => {
       </div>
       <select
         value={selectedValue}
-        className="text-xs"
+        className="text-xs text-right"
         required
         onChange={handleChange}
       >
@@ -66,8 +66,8 @@ export const ContractAddressSelector = (props: Props) => {
         {!defaultValue && <option value="">Select a contract</option>}
         {contracts?.map((contract, index) => (
           <option value={contract.address} key={index}>
-            {contract.network}: {trimHash(contract.address, 6, 4)} -{" "}
-            {contract.name} {contract.symbol}
+            {trimHash(contract.address, 6, 4)} - {contract.name}{" "}
+            {contract.symbol}
           </option>
         ))}
       </select>

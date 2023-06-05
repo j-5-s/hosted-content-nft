@@ -24,7 +24,7 @@ export const Header = ({ children, step }: HeaderProps) => {
           </div>
         </div>
         {step && (
-          <div className="mt- border-t border-gray-200 ">
+          <div className="border-t border-gray-200 ">
             <Progress step={step} />
           </div>
         )}

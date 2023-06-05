@@ -9,6 +9,7 @@ import type { ChainData } from "../hooks/useContract";
 import { useRouter } from "next/router";
 import { Trait } from "./mint/Trait";
 import { ContractMeta, MintForm, SubmitData } from "./mint/MintForm";
+import { trimHash } from "./util";
 
 type Props = {
   nftMetadata: NFTMetadata;
@@ -104,97 +105,102 @@ export const Mint = ({
       onLoad={handleLoad}
       onSubmit={handleSubmit}
     >
-      <div className="lg:flex-grow md:w-1/2 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-        <div className="w-full">
-          <div className="flex border-b border-gray-200 py-2 items-center">
-            <span className="text-gray-500 text-xs">Name</span>
-            <span className="ml-auto text-gray-900 text-xs">
-              {nftMetadata.name}
-            </span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col items-center px-2 md:px-0">
+          <div className="w-full bg-white border rounded shadow px-2 pt-4 text-xs mb-4">
+            <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
+              NFT Details
+            </h2>
+            <div className="flex border-b border-gray-200 py-2 items-center">
+              <span className="w-1/4">Name</span>
+              <span className="ml-auto text-gray-900 ">{nftMetadata.name}</span>
+            </div>
+            <div className="flex border-b border-gray-200 py-2 items-center">
+              <span className="w-1/4 text-xs">Description</span>
+              <span className="ml-auto text-gray-900 text-xs">
+                {nftMetadata.description}
+              </span>
+            </div>
+            <div className="flex border-b border-gray-200 py-2 items-center">
+              <span className="w-1/4">Metadata (IPFS)</span>
+              <span className="ml-auto text-gray-900">
+                <a
+                  target="_blank"
+                  rel="noreferrer nofollow"
+                  className="text-blue-500 hover:underline text-xs"
+                  href={`https://ipfs.io/ipfs/${ipfsHash}`}
+                >
+                  {trimHash(`ipfs://${ipfsHash}`, 9, 4)}
+                </a>
+              </span>
+            </div>
+            <div className="flex py-2  border-b border-gray-200  items-center mb-8">
+              <span className="w-1/4">Image (IPFS)</span>
+              <span className="ml-auto text-gray-900">
+                <a
+                  target="_blank"
+                  rel="noreferrer nofollow"
+                  className="text-blue-500 hover:underline text-xs"
+                  href={value.image}
+                >
+                  {trimHash(nftMetadata?.image, 9, 4)}
+                </a>
+              </span>
+            </div>
+            <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
+              Meta data
+            </h2>
+            <div className="mb-8">
+              {nftMetadata.attributes.map((attr, index) => (
+                <Trait key={index} trait={attr} />
+              ))}
+            </div>
+
+            <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
+              Network Info
+            </h2>
+            <div className="flex border-b border-gray-200  py-2 items-center">
+              <span className="w-1/4">Network</span>
+              <span className="ml-auto text-gray-900">
+                {network?.chain?.network}
+              </span>
+            </div>
+            <div className="flex py-2">
+              <span className="text-gray-500 text-xs">Contract Address</span>
+              <div className="ml-auto text-gray-900 flex">
+                <ContractAddressSelector
+                  defaultValue={value?.contractAddress}
+                  onChange={handleContractChange}
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex border-b border-gray-200 py-2 items-center">
-            <span className="text-gray-500 text-xs">Description</span>
-            <span className="ml-auto text-gray-900 text-xs">
-              {nftMetadata.description}
-            </span>
-          </div>
-          <h2 className="mb-2 text-xs py-2 mt-2">Metadata</h2>
-          <div className="ml-8">
-            {nftMetadata.attributes.map((attr, index) => (
-              <Trait key={index} trait={attr} />
-            ))}
-          </div>
-          <div className="flex border-t border-gray-200 py-2 items-center">
-            <span className="text-gray-500 text-xs">Metadata (IPFS)</span>
-            <span className="ml-auto text-gray-900">
-              <a
-                target="_blank"
-                rel="noreferrer nofollow"
-                className="text-blue-500 hover:underline text-xs"
-                href={`https://ipfs.io/ipfs/${ipfsHash}`}
-              >
-                ipfs://{ipfsHash}
-              </a>
-            </span>
-          </div>
-          <div className="flex border-t border-b border-gray-200 py-2 items-center">
-            <span className="text-gray-500 text-xs">Image (IPFS)</span>
-            <span className="ml-auto text-gray-900">
-              <a
-                target="_blank"
-                rel="noreferrer nofollow"
-                className="text-blue-500 hover:underline text-xs"
-                href={value.image}
-              >
-                {nftMetadata?.image}
-              </a>
-            </span>
+
+          <div className="flex w-full flex-col">
+            {error && (
+              <div className="border overflow-scroll text-xs mb-4 p-4 border-red-200 bg-gray-100">
+                {error.message}
+              </div>
+            )}
+            <MintButton
+              defaultClonePrice={chainData?.defaultClonePrice}
+              hasItemizedClonePrice={
+                !!contractMeta?.data?.hasItemizedClonePrice
+              }
+              disabled={!!error || loading}
+              isOwner={contractMeta?.data?.isOwnerOrApprovedMinter}
+              value={contractMeta?.data?.clonePrice}
+              symbol={network?.chain?.nativeCurrency?.symbol}
+            />
           </div>
         </div>
-        <p className="my-4 leading-relaxed text-xs bg-gray-100 rounded p-4">
-          By clicking Mint you will create a transaction on the blockchain to
-          mint your NFT. This will cost you a small fee. The SHA 256 hash of
-          your html will be used to create the NFT. This means that if you
-          change the html of the page the NFT will be different.
-        </p>
-
-        <div className="flex w-full flex-col">
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500 text-xs">Network</span>
-            <div className="ml-auto text-gray-900 text-xs flex items-center">
-              {network?.chain?.network}
-            </div>
-          </div>
-          <div className="flex border-t border-gray-200 py-2">
-            <span className="text-gray-500 text-xs">Contract Address</span>
-            <div className="ml-auto text-gray-900 flex">
-              <ContractAddressSelector
-                defaultValue={value?.contractAddress}
-                onChange={handleContractChange}
-              />
-            </div>
-          </div>
-          {error && (
-            <div className="border overflow-scroll text-xs mb-4 p-4 border-red-200 bg-gray-100">
-              {error.message}
-            </div>
-          )}
-          <MintButton
-            defaultClonePrice={chainData?.defaultClonePrice}
-            hasItemizedClonePrice={!!contractMeta?.data?.hasItemizedClonePrice}
-            disabled={!!error || loading}
-            isOwner={contractMeta?.data?.isOwnerOrApprovedMinter}
-            value={contractMeta?.data?.clonePrice}
-            symbol={network?.chain?.nativeCurrency?.symbol}
+        <div className="mx-2  md:mx-0 flex items-end flex-col">
+          <SlowImageLoader
+            src={value.image}
+            alt="hero"
+            className="w-full rounded border"
           />
         </div>
-      </div>
-      <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-        <SlowImageLoader
-          src={value.image}
-          alt="hero"
-          className="object-cover object-center rounded border"
-        />
       </div>
     </MintForm>
   );

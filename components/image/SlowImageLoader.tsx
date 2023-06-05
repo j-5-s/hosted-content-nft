@@ -27,7 +27,7 @@ export const SlowImageLoader = ({
     }
   }, [retries, numRetries, src]);
   return (
-    <div>
+    <>
       {imageLoaded && <img src={src} alt={alt} className={className} />}
       {!imageLoaded && retries < numRetries && (
         <section className="text-gray-600 body-font">
@@ -83,6 +83,6 @@ export const SlowImageLoader = ({
           </h2>
         </div>
       )}
-    </div>
+    </>
   );
 };

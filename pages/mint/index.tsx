@@ -83,7 +83,7 @@ const MintPage: NextPage<PageProps> = () => {
       <Header step={4}>
         <h1>Mint NFT</h1>
       </Header>
-      <div className="container mx-auto flex pb-5 flex-col">
+      <div className=" bg-gray-100 ">
         {showLoader && <MintLoading ipfsHash={ipfsHash} />}
         {!showLoader && (
           <Mint
